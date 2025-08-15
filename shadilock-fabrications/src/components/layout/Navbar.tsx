@@ -97,7 +97,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="relative group block px-2 py-2 rounded"
+                className="relative group block px-2 py-2 rounded hover:bg-blueHover transition-colors duration-300"
                 onClick={() => {
                   setActiveLink(link.href);
                   setIsOpen(false);
