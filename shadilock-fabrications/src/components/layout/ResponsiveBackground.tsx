@@ -32,19 +32,19 @@ export default function ResponsiveBackground({
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden -z-10">
       {[
-        { src: desktop, type: "desktop" },
-        { src: laptop, type: "laptop" },
         { src: mobile, type: "mobile" },
+        { src: laptop, type: "laptop" },
+        { src: desktop, type: "desktop" },
       ].map((bg) => (
         <img
           key={bg.type}
           src={bg.src}
           alt={`${bg.type} background`}
-          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
+          className={`absolute top-0 left-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700 ${
             screen === bg.type ? "opacity-100 scale-105" : "opacity-0 scale-100"
           }`}
         />
-      ))}
+      ))}{" "}
     </div>
   );
 }
