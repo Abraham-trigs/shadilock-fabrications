@@ -82,7 +82,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu with Framer Motion */}
+      {/* Mobile Menu with Framer Motion and animated underline */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -97,17 +97,29 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`block px-2 py-2 rounded hover:bg-blueHover ${
-                  activeLink === link.href
-                    ? "bg-orange font-semibold"
-                    : "text-lightText"
-                }`}
+                className="relative group block px-2 py-2 rounded"
                 onClick={() => {
                   setActiveLink(link.href);
                   setIsOpen(false);
                 }}
               >
-                {link.name}
+                <span
+                  className={`relative z-10 ${
+                    activeLink === link.href
+                      ? "text-orange font-semibold"
+                      : "text-lightText"
+                  } hover:text-orangeHover transition-colors duration-300`}
+                >
+                  {link.name}
+                </span>
+                <span
+                  className={`absolute left-1/2 -bottom-1 h-[2px] bg-orange transition-all duration-300 transform -translate-x-1/2
+                    ${
+                      activeLink === link.href
+                        ? "w-full"
+                        : "w-0 group-hover:w-full"
+                    }`}
+                />
               </Link>
             ))}
 
