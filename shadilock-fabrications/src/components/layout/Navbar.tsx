@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { HiMenu, HiX } from "react-icons/hi";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -25,6 +26,20 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const menuVariants = {
+    hidden: { x: "100%", opacity: 0 },
+    visible: {
+      x: "0%",
+      opacity: 1,
+      transition: { type: "spring", stiffness: 300, damping: 30 },
+    },
+    exit: {
+      x: "100%",
+      opacity: 0,
+      transition: { type: "spring", stiffness: 300, damping: 30 },
+    },
+  };
 
   return (
     <nav className="bg-blue text-lightText shadow-md fixed w-full z-50">
@@ -67,35 +82,41 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div
-          ref={menuRef}
-          className="md:hidden bg-blue w-[70%] absolute top-16 right-0 shadow-lg border-l border-blueHover p-4 space-y-4 transition-transform"
-        >
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`block px-2 py-2 rounded hover:bg-blueHover ${
-                activeLink === link.href
-                  ? "bg-orange font-semibold"
-                  : "text-lightText"
-              }`}
-              onClick={() => {
-                setActiveLink(link.href);
-                setIsOpen(false);
-              }}
-            >
-              {link.name}
-            </Link>
-          ))}
+      {/* Mobile Menu with Framer Motion */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={menuRef}
+            className="md:hidden bg-blue w-[70%] absolute top-16 right-0 shadow-lg border-l border-blueHover p-4 space-y-4"
+            variants={menuVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`block px-2 py-2 rounded hover:bg-blueHover ${
+                  activeLink === link.href
+                    ? "bg-orange font-semibold"
+                    : "text-lightText"
+                }`}
+                onClick={() => {
+                  setActiveLink(link.href);
+                  setIsOpen(false);
+                }}
+              >
+                {link.name}
+              </Link>
+            ))}
 
-          <button className="w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
-            Request a Service
-          </button>
-        </div>
-      )}
+            <button className="w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
+              Request a Service
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
