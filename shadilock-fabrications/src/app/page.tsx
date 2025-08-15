@@ -1,26 +1,16 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { HiMenu, HiX } from "react-icons/hi";
-
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Services", href: "/services" },
-  { name: "Contact", href: "/contact" },
-];
+import { useState, useEffect } from "react";
+import Navbar from "@/components/layout/Navbar";
 
 const desktopBg = "./hero-desktop.webp";
 const laptopBg = "./hero-Tablet.webp";
 const mobileBg = "./hero-Mobile.webp";
 
 export default function HomePage() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState<string>("");
   const [screen, setScreen] = useState<"mobile" | "laptop" | "desktop">(
     "mobile"
   );
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [scrollY, setScrollY] = useState(0);
 
   // Handle screen size for background
   useEffect(() => {
@@ -35,24 +25,32 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close mobile menu on outside click
+  // Handle scroll for parallax
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Parallax transform style
+  const parallaxStyle = (factor: number) => ({
+    transform: `translateY(${scrollY * factor}px)`,
+    transition: "transform 0.1s ease-out",
+  });
 
   return (
     <main className="relative w-full min-h-screen text-lightText">
+      {/* Navbar */}
+      <Navbar />
+
       {/* Background Images */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
         <img
           src={desktopBg}
           alt="desktop background"
+          style={parallaxStyle(0.3)}
           className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
             screen === "desktop" ? "opacity-100" : "opacity-0"
           }`}
@@ -60,6 +58,7 @@ export default function HomePage() {
         <img
           src={laptopBg}
           alt="laptop background"
+          style={parallaxStyle(0.3)}
           className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
             screen === "laptop" ? "opacity-100" : "opacity-0"
           }`}
@@ -67,85 +66,12 @@ export default function HomePage() {
         <img
           src={mobileBg}
           alt="mobile background"
+          style={parallaxStyle(0.3)}
           className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
             screen === "mobile" ? "opacity-100" : "opacity-0"
           }`}
         />
       </div>
-
-      {/* Navbar */}
-      <nav className="bg-blue text-lightText shadow-md fixed w-full z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <Link href="/">
-                <span className="text-2xl font-bold text-orange">
-                  Shadilock
-                </span>
-              </Link>
-            </div>
-
-            {/* Desktop Links + Request Button */}
-            <div className="hidden md:flex items-center space-x-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className={`hover:text-orangeHover ${
-                    activeLink === link.href ? "text-orange font-semibold" : ""
-                  }`}
-                  onClick={() => setActiveLink(link.href)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <button className="ml-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition">
-                Request a Service
-              </button>
-            </div>
-
-            {/* Hamburger Menu */}
-            <div className="md:hidden flex items-center">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="text-lightText hover:text-orange focus:outline-none"
-              >
-                {isOpen ? <HiX size={28} /> : <HiMenu size={28} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div
-            ref={menuRef}
-            className="md:hidden bg-blue w-[70%] absolute top-16 right-0 shadow-lg border-l border-blueHover p-4 space-y-4 transition-transform"
-          >
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`block px-2 py-2 rounded hover:bg-blueHover ${
-                  activeLink === link.href
-                    ? "bg-orange font-semibold"
-                    : "text-lightText"
-                }`}
-                onClick={() => {
-                  setActiveLink(link.href);
-                  setIsOpen(false);
-                }}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <button className="w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition">
-              Request a Service
-            </button>
-          </div>
-        )}
-      </nav>
 
       {/* Hero Content */}
       <section className="relative z-10 flex flex-col items-center justify-center h-screen text-center px-4">
