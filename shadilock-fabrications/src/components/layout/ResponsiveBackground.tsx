@@ -31,34 +31,25 @@ export default function ResponsiveBackground({
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
-      {/* Desktop Image */}
-      <img
-        src={desktop}
-        alt="desktop background"
-        className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
-          screen === "desktop" ? "opacity-100" : "opacity-0"
-        }`}
-      />
-      {/* Laptop Image */}
-      <img
-        src={laptop}
-        alt="laptop background"
-        className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
-          screen === "laptop" ? "opacity-100" : "opacity-0"
-        }`}
-      />
-      {/* Mobile Image */}
-      <img
-        src={mobile}
-        alt="mobile background"
-        className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
-          screen === "mobile" ? "opacity-100" : "opacity-0"
-        }`}
-      />
+      {/* Background Images */}
+      {[
+        { src: desktop, type: "desktop" },
+        { src: laptop, type: "laptop" },
+        { src: mobile, type: "mobile" },
+      ].map((bg) => (
+        <img
+          key={bg.type}
+          src={bg.src}
+          alt={`${bg.type} background`}
+          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
+            screen === bg.type ? "opacity-100 scale-105" : "opacity-0 scale-100"
+          }`}
+        />
+      ))}
 
-      {/* Optional overlay content */}
+      {/* Overlay Content */}
       <div className="relative z-10 flex items-center justify-center h-full text-lightText px-4 text-center">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold animate-fadeIn">
           Welcome to Shadilock
         </h1>
       </div>
