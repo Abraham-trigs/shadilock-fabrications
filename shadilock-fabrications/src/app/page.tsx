@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/components/layout/Navbar";
 import ResponsiveBackground from "@/components/layout/ResponsiveBackground";
+import HeroContent from "@/components/home/HeroContent";
 
 const desktopBg = "./hero-desktop.webp";
 const laptopBg = "./hero-Tablet.webp";
@@ -8,29 +9,21 @@ const mobileBg = "./hero-Mobile.webp";
 
 export default function HomePage() {
   return (
-    <main className="relative w-full min-h-screen text-lightText">
+    <main className="relative w-full text-lightText">
       {/* Navbar */}
       <Navbar />
 
-      {/* Responsive Background */}
-      <ResponsiveBackground
-        desktop={desktopBg}
-        laptop={laptopBg}
-        mobile={mobileBg}
-      />
+      {/* Hero Section */}
+      <section className="relative w-full min-h-screen">
+        {/* Background */}
+        <ResponsiveBackground
+          desktop={desktopBg}
+          laptop={laptopBg}
+          mobile={mobileBg}
+        />
 
-      {/* Hero Content */}
-      <section className="relative z-10 flex flex-col items-center justify-center h-screen text-center px-4">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
-          Welcome to Shadilock
-        </h1>
-        <p className="text-lightText max-w-xl mb-6">
-          Your trusted partner in high-quality locksmith services. Secure,
-          reliable, and efficient solutions tailored for your needs.
-        </p>
-        <button className="px-6 py-3 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
-          Request a Service
-        </button>
+        {/* Hero Content */}
+        <HeroContent />
       </section>
 
       {/* Info Cards */}

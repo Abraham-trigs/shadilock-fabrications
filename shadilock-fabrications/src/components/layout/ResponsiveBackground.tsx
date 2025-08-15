@@ -24,14 +24,13 @@ export default function ResponsiveBackground({
       else setScreen("mobile");
     };
 
-    handleResize(); // Set initial state
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      {/* Background Images */}
+    <div className="absolute inset-0 w-full h-full overflow-hidden -z-10">
       {[
         { src: desktop, type: "desktop" },
         { src: laptop, type: "laptop" },
@@ -46,13 +45,6 @@ export default function ResponsiveBackground({
           }`}
         />
       ))}
-
-      {/* Overlay Content */}
-      <div className="relative z-10 flex items-center justify-center h-full text-lightText px-4 text-center">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold animate-fadeIn">
-          Welcome to Shadilock
-        </h1>
-      </div>
     </div>
   );
 }
