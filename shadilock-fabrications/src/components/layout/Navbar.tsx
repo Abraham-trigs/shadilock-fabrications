@@ -37,8 +37,8 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex space-x-6">
+          {/* Desktop Links + Button */}
+          <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -51,6 +51,11 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
+
+            {/* Request Button */}
+            <button className="ml-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition">
+              Request a Service
+            </button>
           </div>
 
           {/* Hamburger Menu */}
@@ -88,6 +93,11 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+
+          {/* Mobile Request Button */}
+          <button className="w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition">
+            Request a Service
+          </button>
         </div>
       )}
     </nav>
