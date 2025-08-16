@@ -24,7 +24,9 @@ export default function HomePage() {
         />
 
         {/* Hero Content */}
-        <HeroContent />
+        <div className="">
+          <HeroContent />
+        </div>
       </section>
 
       {/* Info Cards */}
