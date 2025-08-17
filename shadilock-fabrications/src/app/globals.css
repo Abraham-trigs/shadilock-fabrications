@@ -79,3 +79,23 @@ body {
     @apply bg-background text-foreground;
   }
 } 
+
+@keyframes fadeInRotate {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) rotateY(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotateY(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(360deg);
+  }
+}
+
+.animate-fadeInRotate {
+  animation: fadeInRotate 5s ease-out forwards infinite;
+}
+

@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Shield, Pencil, Truck } from "lucide-react";
+import Image from "next/image";
 
 const coreValues = [
   {
@@ -39,6 +40,17 @@ export default function About() {
     <section className="w-full bg-blue text-lightText px-6 md:px-12 lg:px-20 py-16">
       {/* Hero / Intro */}
       <div className="max-w-4xl mx-auto text-center mb-16">
+        {/* Logo */}
+        <div className="mb-8 flex justify-center">
+          <Image
+            src="/logo-white.webp"
+            alt="Shadilock Fabrication Logo"
+            width={120}
+            height={120}
+            className="object-contain animate-fadeInRotate"
+          />
+        </div>
+
         <h1 className="text-4xl md:text-5xl font-bold mb-4 hover:scale-105 transition-transform duration-300">
           About Our Company
         </h1>
@@ -73,7 +85,7 @@ export default function About() {
             return (
               <Card
                 key={idx}
-                className="bg-[#080023] border border-[#15005c] rounded-2xl p-6
+                className="bg-blueHover border border-orange hover:bg-blue rounded-2xl p-6
                            transform transition-transform duration-300 hover:scale-105 hover:shadow-lg"
               >
                 <CardContent className="flex flex-col items-center text-center">
