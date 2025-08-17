@@ -3,19 +3,49 @@
 import { Card, CardContent } from "@/components/ui/card";
 import {
   DoorOpen,
-  Window,
+  Layers, // for Partitions
   PanelsTopLeft,
   Store,
-  SquareSplitVertical,
-  Hammer,
   Building,
   Umbrella,
 } from "lucide-react";
 
+// Custom Window Icon since lucide-react doesn't have Window
+const WindowIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    {...props}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <line x1="12" y1="3" x2="12" y2="21" />
+    <line x1="3" y1="12" x2="21" y2="12" />
+  </svg>
+);
+
+const ToolIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    {...props}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M14.7 3.3a2 2 0 1 1 2.8 2.8l-1.4 1.4-2.8-2.8 1.4-1.4z" />
+    <path d="M4 21v-4.5l9.5-9.5 4.5 4.5-9.5 9.5H4z" />
+  </svg>
+);
+
 const services = [
   {
     title: "Aluminium Windows",
-    icon: Window,
+    icon: WindowIcon,
     desc: "Durable, stylish and energy efficient windows.",
   },
   {
@@ -35,12 +65,12 @@ const services = [
   },
   {
     title: "Partitions",
-    icon: SquareSplitVertical,
+    icon: Layers,
     desc: "Smart partitioning systems for offices and homes.",
   },
   {
     title: "Custom Fabrication",
-    icon: Hammer,
+    icon: ToolIcon,
     desc: "Tailored metal fabrication to match your needs.",
   },
   {
@@ -59,7 +89,6 @@ export default function OurServices() {
   return (
     <section className="relative w-full bg-surface py-16 px-6 md:px-12 lg:px-20">
       <div className="max-w-7xl mx-auto text-center">
-        {/* Section Title */}
         <h2 className="text-3xl md:text-4xl font-bold text-textPrimary mb-6">
           Our Services
         </h2>
@@ -68,14 +97,13 @@ export default function OurServices() {
           designed to meet modern architectural needs.
         </p>
 
-        {/* Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {services.map((service, idx) => {
             const Icon = service.icon;
             return (
               <Card
                 key={idx}
-                className="bg-background border-borderAlt hover:shadow-lg transition rounded-2xl"
+                className="bg-lightText border-borderAlt hover:shadow-lg transition rounded-2xl"
               >
                 <CardContent className="p-6 flex flex-col items-center text-center">
                   <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-surface border border-borderAlt">

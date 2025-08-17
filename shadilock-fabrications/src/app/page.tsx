@@ -4,6 +4,7 @@ import ResponsiveBackground from "@/components/layout/ResponsiveBackground";
 import HeroContent from "@/components/home/HeroContent";
 import InfoCards from "@/components/home/InfoCards";
 import ImageCarousel from "@/components/home/ImageCarousel";
+import OurServices from "@/components/home/OurServices";
 
 const desktopBg = "./hero-desktop.webp";
 const laptopBg = "./hero-Tablet.webp";
@@ -52,6 +53,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        <OurServices />
         <InfoCards />
       </section>
 
