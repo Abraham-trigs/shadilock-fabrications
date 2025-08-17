@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Head from "next/head";
+import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 export default function Contact() {
   const [animate, setAnimate] = useState(false);
@@ -65,9 +66,6 @@ export default function Contact() {
               animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"
             }`}
           >
-            <label htmlFor="name" className="sr-only">
-              Your Name
-            </label>
             <input
               id="name"
               name="name"
@@ -80,9 +78,6 @@ export default function Contact() {
               required
             />
 
-            <label htmlFor="email" className="sr-only">
-              Your Email
-            </label>
             <input
               id="email"
               name="email"
@@ -95,9 +90,6 @@ export default function Contact() {
               required
             />
 
-            <label htmlFor="phone" className="sr-only">
-              Phone Number
-            </label>
             <input
               id="phone"
               name="phone"
@@ -109,9 +101,6 @@ export default function Contact() {
               className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition"
             />
 
-            <label htmlFor="message" className="sr-only">
-              Your Message
-            </label>
             <textarea
               id="message"
               name="message"
@@ -131,7 +120,7 @@ export default function Contact() {
             </button>
           </form>
 
-          {/* Company Info + Map */}
+          {/* Company Info + Map + Socials */}
           <div
             className={`flex flex-col gap-6 text-lightText opacity-90 transform transition-all duration-700 delay-200 ${
               animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"
@@ -154,20 +143,49 @@ export default function Contact() {
               <p>Mon - Sat: 8:00 AM - 6:00 PM</p>
             </div>
 
+            {/* Social Media Links */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3">Follow Us</h3>
+              <div className="flex gap-4">
+                <a
+                  href="https://facebook.com/shadilock"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                >
+                  <FaFacebookF size={20} />
+                </a>
+                <a
+                  href="https://instagram.com/shadilock"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                >
+                  <FaInstagram size={20} />
+                </a>
+                <a
+                  href="https://wa.me/233240000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                >
+                  <FaWhatsapp size={20} />
+                </a>
+              </div>
+            </div>
+
             {/* Google Maps Embed */}
             <div className="mt-4 w-full h-64 rounded-lg overflow-hidden border border-blue">
-              <div className="mt-8 w-full h-64 md:h-96 rounded-lg overflow-hidden border border-blue">
-                <iframe
-                  title="Shadilock Fabrication Location"
-                  src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d496.3452759333099!2d-0.0780476097869873!3d5.602104889380039!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sgh!4v1755468175286!5m2!1sen!2sgh"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
+              <iframe
+                title="Shadilock Fabrication Location"
+                src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d496.3452759333099!2d-0.0780476097869873!3d5.602104889380039!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sgh!4v1755468175286!5m2!1sen!2sgh"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
             </div>
           </div>
         </div>
