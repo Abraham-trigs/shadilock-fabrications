@@ -20,7 +20,7 @@ export default function HeroContent() {
       </p>
 
       {/* Button */}
-      <button className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 lg:px-12 lg:py-6 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
+      <button className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 lg:px-12 lg:py-6 bg-lightText text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
         Request a Service
       </button>
     </div>

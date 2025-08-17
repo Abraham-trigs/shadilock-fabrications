@@ -10,7 +10,7 @@ export default function LogoStrip({ logoSrc }: LogoStripProps) {
       className="
         w-full flex justify-center items-center
         bg-lightText
-        h-40 sm:h-48 md:h-56 lg:h-64 xl:h-80 2xl:h-96
+        h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64
         rounded-xl
         transition-all
       "
@@ -19,7 +19,7 @@ export default function LogoStrip({ logoSrc }: LogoStripProps) {
         src={logoSrc}
         alt="Logo"
         className="
-          h-28 sm:h-36 md:h-44 lg:h-56 xl:h-72 2xl:h-80
+          h-20 sm:h-28 md:h-32 lg:h-40 xl:h-48
           object-contain transition-all
         "
       />
