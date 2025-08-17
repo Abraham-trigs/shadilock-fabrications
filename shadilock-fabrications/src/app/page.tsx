@@ -5,6 +5,7 @@ import HeroContent from "@/components/home/HeroContent";
 import InfoCards from "@/components/home/InfoCards";
 import ImageCarousel from "@/components/home/ImageCarousel";
 import OurServices from "@/components/home/OurServices";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
 
 const desktopBg = "./hero-desktop.webp";
 const laptopBg = "./hero-Tablet.webp";
@@ -55,6 +56,7 @@ export default function HomePage() {
         </div>
         <OurServices />
         <InfoCards />
+        <WhyChooseUs />
       </section>
 
       {/* Info Cards */}
