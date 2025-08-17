@@ -3,14 +3,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import {
   DoorOpen,
-  Layers, // for Partitions
+  Layers,
   PanelsTopLeft,
   Store,
   Building,
   Umbrella,
 } from "lucide-react";
 
-// Custom Window Icon since lucide-react doesn't have Window
+// Custom Window Icon
 const WindowIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     {...props}
@@ -27,6 +27,7 @@ const WindowIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+// Custom Tool Icon
 const ToolIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     {...props}
@@ -103,11 +104,17 @@ export default function OurServices() {
             return (
               <Card
                 key={idx}
-                className="bg-lightText border-borderAlt hover:shadow-lg transition rounded-2xl"
+                className="bg-lightText border-borderAlt rounded-2xl 
+                  transform transition-transform duration-300 hover:scale-105 hover:shadow-xl
+                  animate-fadeIn"
+                style={{ animationDelay: `${idx * 100}ms` }}
               >
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-surface border border-borderAlt">
-                    <Icon className="w-10 h-10 text-sea" />
+                  <div
+                    className="w-16 h-16 mb-4 flex items-center justify-center rounded-xl 
+                    bg-surface border border-borderAlt transition-colors duration-300 hover:bg-blueHover"
+                  >
+                    <Icon className="w-10 h-10 text-sea transition-colors duration-300 hover:text-orangeHover" />
                   </div>
                   <h3 className="text-lg font-semibold text-textPrimary mb-2">
                     {service.title}
@@ -119,6 +126,22 @@ export default function OurServices() {
           })}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.6s forwards;
+        }
+      `}</style>
     </section>
   );
 }
