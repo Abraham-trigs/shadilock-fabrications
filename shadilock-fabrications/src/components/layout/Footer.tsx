@@ -4,7 +4,7 @@ import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-blueHover text-lightText mt-2">
+    <footer className="border-t border-blueHover text-lightText mt-40">
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
         {/* Brand / Logo */}
         <div>
