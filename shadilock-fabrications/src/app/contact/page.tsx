@@ -151,7 +151,7 @@ export default function Contact() {
                   href="https://facebook.com/shadilock"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                  className="p-3 rounded-full bg-orange border border-blueHover hover:bg-orange hover:text-darkBg transition"
                 >
                   <FaFacebookF size={20} />
                 </a>
@@ -159,7 +159,7 @@ export default function Contact() {
                   href="https://instagram.com/shadilock"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                  className="p-3 rounded-full bg-orange border border-blueHover hover:bg-orange hover:text-darkBg transition"
                 >
                   <FaInstagram size={20} />
                 </a>
@@ -167,7 +167,7 @@ export default function Contact() {
                   href="https://wa.me/233246786638"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                  className="p-3 rounded-full bg-orange border border-blueHover hover:bg-orange hover:text-darkBg transition"
                 >
                   <FaWhatsapp size={20} />
                 </a>
