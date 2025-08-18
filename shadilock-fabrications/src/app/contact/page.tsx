@@ -65,8 +65,8 @@ export default function Contact() {
             Contact Us
           </h1>
           <p className="opacity-80">
-            Reach out to us for quotes, inquiries, or support. We're happy to
-            help!
+            Reach out to us for quotes, inquiries, or support. We&apos;re happy
+            to help!
           </p>
         </div>
 
