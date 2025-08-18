@@ -47,9 +47,9 @@ export const metadata: Metadata = {
   },
 };
 
-const desktopBg = "./hero-desktop.webp";
-const laptopBg = "./hero-Tablet.webp";
-const mobileBg = "./hero-Mobile.webp";
+const desktopBg = "/hero-desktop.webp";
+const laptopBg = "/hero-Tablet.webp";
+const mobileBg = "/hero-Mobile.webp";
 
 const carouselImages = [
   "/img1.avif",
