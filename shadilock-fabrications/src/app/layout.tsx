@@ -1,6 +1,7 @@
 // app/layout.tsx
 "use client";
 
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 
@@ -15,6 +16,8 @@ export default function RootLayout({
         {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
         <Navbar />
         {children}
+        {/* Footer */}
+        <Footer />
         {/* </ThemeProvider> */}
       </body>
     </html>

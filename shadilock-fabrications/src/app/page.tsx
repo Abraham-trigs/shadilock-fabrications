@@ -100,9 +100,6 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-blueHover text-lightText text-center mt-2">
-        <p>&copy; {new Date().getFullYear()} Shadilock. All rights reserved.</p>
-      </footer>
     </main>
   );
 }
