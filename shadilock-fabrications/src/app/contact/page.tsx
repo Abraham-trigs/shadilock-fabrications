@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Contact() {
   const [animate, setAnimate] = useState(false);
@@ -49,6 +50,17 @@ export default function Contact() {
 
       <section className="w-full bg-blue text-lightText px-6 md:px-12 lg:px-20 py-16">
         <div className="max-w-4xl mx-auto text-center mb-12">
+          {/* Logo */}
+          <div className="mb-6 flex justify-center">
+            <Image
+              src="/logo-white.webp"
+              alt="Shadilock Fabrication Logo"
+              width={120}
+              height={120}
+              className="object-contain animate-fadeInRotate"
+            />
+          </div>
+
           <h1 className="text-4xl md:text-5xl font-bold mb-4 hover:text-orange transition-colors duration-300">
             Contact Us
           </h1>

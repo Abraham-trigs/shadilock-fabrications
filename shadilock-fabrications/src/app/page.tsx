@@ -95,8 +95,8 @@ export default function HomePage() {
           </div>
         </div>
         <OurServices />
-        <InfoCards />
         <WhyChooseUs />
+        <InfoCards />
       </section>
 
       {/* Footer */}
