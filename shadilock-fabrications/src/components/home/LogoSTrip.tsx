@@ -1,10 +1,16 @@
 "use client";
 
+import Image from "next/image";
+
 interface LogoStripProps {
   logoSrc: string;
+  altText?: string;
 }
 
-export default function LogoStrip({ logoSrc }: LogoStripProps) {
+export default function LogoStrip({
+  logoSrc,
+  altText = "Logo",
+}: LogoStripProps) {
   return (
     <div
       className="
@@ -15,13 +21,16 @@ export default function LogoStrip({ logoSrc }: LogoStripProps) {
         transition-all
       "
     >
-      <img
+      <Image
         src={logoSrc}
-        alt="Logo"
+        alt={altText}
+        width={384} // corresponds to xl:h-48 (48 * 8px = 384px)
+        height={192} // adjust proportionally to your logo
         className="
           h-20 sm:h-28 md:h-32 lg:h-40 xl:h-48
           object-contain transition-all
         "
+        priority
       />
     </div>
   );
