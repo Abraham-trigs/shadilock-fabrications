@@ -1,137 +1,208 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Star, Shield, Pencil, Truck } from "lucide-react";
+import { useState, useEffect } from "react";
+import Head from "next/head";
 import Image from "next/image";
+import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
-const coreValues = [
-  {
-    title: "Experience",
-    icon: Star,
-    desc: "Years of industry experience delivering top-notch solutions.",
-  },
-  {
-    title: "Quality Materials",
-    icon: Shield,
-    desc: "We use only the best materials for durability and elegance.",
-  },
-  {
-    title: "Custom Designs",
-    icon: Pencil,
-    desc: "Tailored designs to match your unique style and needs.",
-  },
-  {
-    title: "Fast Delivery",
-    icon: Truck,
-    desc: "Quick and reliable delivery to keep your projects on schedule.",
-  },
-];
+export default function Contact() {
+  const [animate, setAnimate] = useState(false);
 
-const teamMembers = [
-  { name: "Alice Johnson", role: "CEO", img: "/team/alice.jpg" },
-  { name: "David Smith", role: "Lead Designer", img: "/team/david.jpg" },
-  { name: "Maria Lee", role: "Project Manager", img: "/team/maria.jpg" },
-  { name: "James Brown", role: "Fabrication Expert", img: "/team/james.jpg" },
-  { name: "Sophia Davis", role: "Customer Support", img: "/team/sophia.jpg" },
-];
+  useEffect(() => {
+    setAnimate(true);
+  }, []);
 
-export default function About() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", form);
+  };
+
   return (
-    <section className="w-full bg-blue text-lightText px-6 md:px-12 lg:px-20 py-16">
-      {/* Hero / Intro */}
-      <div className="max-w-4xl mx-auto text-center mb-16">
-        {/* Logo */}
-        <div className="mb-8 flex justify-center">
-          <Image
-            src="/logo-white.webp"
-            alt="Shadilock Fabrication Logo"
-            width={120}
-            height={120}
-            className="object-contain animate-fadeInRotate"
-          />
+    <>
+      <Head>
+        <title>
+          Contact Shadilock Fabrication | Aluminium & Glass Solutions
+        </title>
+        <meta
+          name="description"
+          content="Get in touch with Shadilock Fabrication for quotes, inquiries, and support. High-quality aluminium and glass solutions in Accra, Ghana."
+        />
+        <meta property="og:title" content="Contact Shadilock Fabrication" />
+        <meta
+          property="og:description"
+          content="Reach out for quotes, inquiries, or support for aluminium and glass solutions."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
+      <section className="w-full bg-blue text-lightText px-6 md:px-12 lg:px-20 py-16">
+        {/* Logo + Hero */}
+        <div className="max-w-4xl mx-auto text-center mb-16">
+          <div className="mb-8 flex justify-center">
+            <Image
+              src="/logo-white.webp"
+              alt="Shadilock Fabrication Logo"
+              width={120}
+              height={120}
+              className="object-contain animate-fadeInRotate"
+              priority
+            />
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 hover:scale-105 transition-transform duration-300">
+            Contact Us
+          </h1>
+          <p className="text-lightText opacity-80 font-medium">
+            We are a leading provider of aluminium and glass solutions,
+            committed to quality, innovation, and customer satisfaction.
+          </p>
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 hover:scale-105 transition-transform duration-300">
-          About Our Company
-        </h1>
-        <p className="text-lightText opacity-80 font-medium">
-          We are a leading provider of aluminium and glass solutions, committed
-          to quality, innovation, and customer satisfaction.
-        </p>
-      </div>
+        <div className="max-w-4xl mx-auto grid gap-12 md:grid-cols-2">
+          {/* Contact Form */}
+          <form
+            onSubmit={handleSubmit}
+            className={`flex flex-col gap-4 transform transition-all duration-700 ${
+              animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"
+            }`}
+          >
+            <input
+              id="name"
+              name="name"
+              type="text"
+              aria-label="Your Name"
+              placeholder="Your Name"
+              value={form.name}
+              onChange={handleChange}
+              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition"
+              required
+            />
 
-      {/* Our Story */}
-      <div className="max-w-4xl mx-auto mb-16">
-        <h2 className="text-3xl font-bold mb-4 hover:text-orangeHover transition-colors duration-300">
-          Our Story
-        </h2>
-        <p className="text-lightText opacity-80 leading-relaxed">
-          Founded with a passion for quality craftsmanship, our company has
-          grown into a trusted partner for clients seeking durable, stylish, and
-          innovative aluminium and glass solutions. Our team combines technical
-          expertise with a commitment to exceptional service.
-        </p>
-      </div>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              aria-label="Your Email"
+              placeholder="Your Email"
+              value={form.email}
+              onChange={handleChange}
+              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition"
+              required
+            />
 
-      {/* Core Values */}
-      <div className="max-w-7xl mx-auto text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-lightText mb-12">
-          Our Core Values
-        </h2>
+            <input
+              id="phone"
+              name="phone"
+              type="text"
+              aria-label="Phone Number"
+              placeholder="Phone Number"
+              value={form.phone}
+              onChange={handleChange}
+              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition"
+            />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {coreValues.map((value, idx) => {
-            const Icon = value.icon;
-            return (
-              <Card
-                key={idx}
-                className="bg-blueHover border border-orange hover:bg-blue rounded-2xl p-6
-                           transform transition-transform duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <CardContent className="flex flex-col items-center text-center">
-                  <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-[#15005c] border border-[#080023]">
-                    <Icon className="w-10 h-10 text-[#ff7800]" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-lightText mb-2">
-                    {value.title}
-                  </h3>
-                  <p className="text-sm text-lightText opacity-80">
-                    {value.desc}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
+            <textarea
+              id="message"
+              name="message"
+              aria-label="Your Message"
+              placeholder="Your Message"
+              value={form.message}
+              onChange={handleChange}
+              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition resize-none h-32"
+              required
+            />
 
-      {/* Team Section */}
-      <div className="max-w-7xl mx-auto text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-lightText mb-12">
-          Meet Our Team
-        </h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 justify-items-center">
-          {teamMembers.map((member, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col items-center text-center transition-transform duration-300 hover:scale-105"
+            <button
+              type="submit"
+              className="bg-orange hover:bg-orangeHover text-darkBg font-bold py-3 px-6 rounded-lg transition"
             >
-              <div className="w-24 h-24 mb-4 rounded-full overflow-hidden border-2 border-[#15005c]">
-                <img
-                  src={member.img}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-lg font-semibold text-lightText">
-                {member.name}
-              </h3>
-              <p className="text-sm text-lightText opacity-80">{member.role}</p>
+              Send Message
+            </button>
+          </form>
+
+          {/* Company Info + Map + Socials */}
+          <div
+            className={`flex flex-col gap-6 text-lightText opacity-90 transform transition-all duration-700 delay-200 ${
+              animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"
+            }`}
+          >
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Address</h3>
+              <p>123 Aluminium St., Accra, Ghana</p>
             </div>
-          ))}
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Email</h3>
+              <p>info@shadilock.com</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Phone</h3>
+              <p>+233 24 000 0000</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Working Hours</h3>
+              <p>Mon - Sat: 8:00 AM - 6:00 PM</p>
+            </div>
+
+            {/* Social Media Links */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3">Follow Us</h3>
+              <div className="flex gap-4">
+                <a
+                  href="https://facebook.com/shadilock"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                >
+                  <FaFacebookF size={20} />
+                </a>
+                <a
+                  href="https://instagram.com/shadilock"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                >
+                  <FaInstagram size={20} />
+                </a>
+                <a
+                  href="https://wa.me/233240000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
+                >
+                  <FaWhatsapp size={20} />
+                </a>
+              </div>
+            </div>
+
+            {/* Google Maps Embed */}
+            <div className="mt-4 w-full h-64 rounded-lg overflow-hidden border border-blue">
+              <iframe
+                title="Shadilock Fabrication Location"
+                src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d496.3452759333099!2d-0.0780476097869873!3d5.602104889380039!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sgh!4v1755468175286!5m2!1sen!2sgh"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

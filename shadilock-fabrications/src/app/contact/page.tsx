@@ -74,7 +74,7 @@ export default function Contact() {
               placeholder="Your Name"
               value={form.name}
               onChange={handleChange}
-              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition"
+              className="p-3 rounded-lg bg-lightText border border-blue focus:border-orange focus:outline-none transition"
               required
             />
 
@@ -86,7 +86,7 @@ export default function Contact() {
               placeholder="Your Email"
               value={form.email}
               onChange={handleChange}
-              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition"
+              className="p-3 rounded-lg bg-lightText border border-blue focus:border-orange focus:outline-none transition"
               required
             />
 
@@ -98,7 +98,7 @@ export default function Contact() {
               placeholder="Phone Number"
               value={form.phone}
               onChange={handleChange}
-              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition"
+              className="p-3 rounded-lg bg-lightText border border-blue focus:border-orange focus:outline-none transition"
             />
 
             <textarea
@@ -108,7 +108,7 @@ export default function Contact() {
               placeholder="Your Message"
               value={form.message}
               onChange={handleChange}
-              className="p-3 rounded-lg bg-darkBg border border-blue focus:border-orange focus:outline-none transition resize-none h-32"
+              className="p-3 rounded-lg bg-lightText border border-blue focus:border-orange focus:outline-none transition resize-none h-32"
               required
             />
 
@@ -136,7 +136,7 @@ export default function Contact() {
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-2">Phone</h3>
-              <p>+233 24 000 0000</p>
+              <p>+233 246 786 638</p>
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-2">Working Hours</h3>
@@ -164,7 +164,7 @@ export default function Contact() {
                   <FaInstagram size={20} />
                 </a>
                 <a
-                  href="https://wa.me/233240000000"
+                  href="https://wa.me/233246786638"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3 rounded-full bg-darkBg border border-blue hover:bg-orange hover:text-darkBg transition"
