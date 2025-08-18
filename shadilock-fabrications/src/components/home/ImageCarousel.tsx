@@ -51,7 +51,10 @@ export default function ImageCarousel({
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((img, idx) => (
-          <div key={idx} className="w-full flex-shrink-0 relative">
+          <div
+            key={idx}
+            className="w-full flex-shrink-0 relative h-64 sm:h-80 md:h-[26rem] lg:h-[28rem] xl:h-[32rem]"
+          >
             <Image
               src={img}
               alt={`Slide ${idx + 1}`}
@@ -91,9 +94,7 @@ export default function ImageCarousel({
               className={`h-full bg-white transition-all duration-100 ${
                 idx === currentIndex ? "w-full" : "w-0"
               }`}
-              style={{
-                width: idx === currentIndex ? `${progress}%` : "0%",
-              }}
+              style={{ width: idx === currentIndex ? `${progress}%` : "0%" }}
             />
           </div>
         ))}
