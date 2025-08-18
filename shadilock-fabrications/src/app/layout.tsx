@@ -1,8 +1,8 @@
 "use client";
 
+import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
 
 export default function RootLayout({
   children,
@@ -12,8 +12,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
+        {/* Navbar */}
         <Navbar />
-        {children}
+
+        {/* Main page content */}
+        <main>{children}</main>
+
         {/* Footer */}
         <Footer />
       </body>
