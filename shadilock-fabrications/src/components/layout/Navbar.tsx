@@ -1,8 +1,9 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { HiMenu, HiX } from "react-icons/hi";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -27,8 +28,13 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const menuVariants = {
-    hidden: { x: "100%", opacity: 0 },
+  // Define variants with proper type
+  const menuVariants: Variants = {
+    hidden: {
+      x: "100%",
+      opacity: 0,
+      transition: { type: "spring", stiffness: 300, damping: 30 },
+    },
     visible: {
       x: "0%",
       opacity: 1,
@@ -82,7 +88,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu with Framer Motion and animated underline */}
+      {/* Mobile Menu with Framer Motion */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -113,12 +119,11 @@ export default function Navbar() {
                   {link.name}
                 </span>
                 <span
-                  className={`absolute left-1/2 -bottom-1 h-[2px] bg-orange transition-all duration-300 transform -translate-x-1/2
-                    ${
-                      activeLink === link.href
-                        ? "w-full"
-                        : "w-0 group-hover:w-full"
-                    }`}
+                  className={`absolute left-1/2 -bottom-1 h-[2px] bg-orange transition-all duration-300 transform -translate-x-1/2 ${
+                    activeLink === link.href
+                      ? "w-full"
+                      : "w-0 group-hover:w-full"
+                  }`}
                 />
               </Link>
             ))}
