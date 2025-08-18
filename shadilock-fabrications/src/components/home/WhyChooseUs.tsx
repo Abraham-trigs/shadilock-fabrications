@@ -3,42 +3,48 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Package, Pencil, Truck, Shield, Clock } from "lucide-react";
 
-const reasons = [
+interface Reason {
+  title: string;
+  icon: React.ForwardRefExoticComponent<any>;
+  desc: string;
+}
+
+const reasons: Reason[] = [
   {
     title: "Experience",
     icon: Star,
-    // desc: "Years of industry experience delivering top-notch solutions.",
+    desc: "Years of industry experience delivering top-notch solutions.",
   },
   {
     title: "Quality Materials",
     icon: Shield,
-    // desc: "We use only the best materials for durability and elegance.",
+    desc: "We use only the best materials for durability and elegance.",
   },
   {
     title: "Custom Designs",
     icon: Pencil,
-    // desc: "Tailored designs to match your unique style and needs.",
+    desc: "Tailored designs to match your unique style and needs.",
   },
   {
     title: "Fast Delivery",
     icon: Truck,
-    // desc: "Quick and reliable delivery to keep your projects on schedule.",
+    desc: "Quick and reliable delivery to keep your projects on schedule.",
   },
   {
     title: "Reliable Support",
     icon: Package,
-    // desc: "Dedicated support to assist you at every step.",
+    desc: "Dedicated support to assist you at every step.",
   },
   {
     title: "Timely Completion",
     icon: Clock,
-    // desc: "We finish projects on time without compromising quality.",
+    desc: "We finish projects on time without compromising quality.",
   },
 ];
 
 export default function WhyChooseUs() {
   return (
-    <section className="relative w-full  py-16 px-6 md:px-12 lg:px-20 mt-15">
+    <section className="relative w-full py-16 px-6 md:px-12 lg:px-20 mt-15">
       <div className="max-w-7xl mx-auto text-center">
         <h2
           className="text-3xl md:text-4xl font-bold text-lightText mb-6 
@@ -51,7 +57,7 @@ export default function WhyChooseUs() {
                transition-colors duration-300 hover:text-orangeHover"
         >
           We stand out in the industry by delivering high-quality solutions that
-          meet our clients’ expectations.
+          meet our clients&apos; expectations.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -60,7 +66,7 @@ export default function WhyChooseUs() {
             return (
               <Card
                 key={idx}
-                className=" bg-orange Hover:bg-blue border border-blue rounded-2xl 
+                className="bg-orange Hover:bg-blue border border-blue rounded-2xl 
                   transform transition-transform duration-300 hover:scale-105 hover:shadow-lg
                   animate-fadeIn"
                 style={{ animationDelay: `${idx * 100}ms` }}
