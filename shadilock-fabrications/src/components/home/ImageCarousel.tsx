@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 interface ImageCarouselProps {
   images: string[];
@@ -51,10 +52,14 @@ export default function ImageCarousel({
       >
         {images.map((img, idx) => (
           <div key={idx} className="w-full flex-shrink-0 relative">
-            <img
+            <Image
               src={img}
               alt={`Slide ${idx + 1}`}
-              className="w-full h-64 sm:h-80 md:h-[26rem] lg:h-[28rem] xl:h-[32rem] object-cover"
+              fill
+              sizes="100vw"
+              loading={idx === currentIndex ? "eager" : "lazy"}
+              priority={idx === currentIndex}
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           </div>
