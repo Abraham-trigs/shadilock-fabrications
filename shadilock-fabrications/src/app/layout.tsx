@@ -1,4 +1,3 @@
-// app/layout.tsx
 "use client";
 
 import Footer from "@/components/layout/Footer";
@@ -13,12 +12,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
         <Navbar />
         {children}
         {/* Footer */}
         <Footer />
-        {/* </ThemeProvider> */}
       </body>
     </html>
   );
