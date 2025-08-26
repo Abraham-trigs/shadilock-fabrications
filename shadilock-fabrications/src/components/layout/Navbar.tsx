@@ -70,10 +70,11 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-
-            <button className="ml-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
-              Request a Service
-            </button>
+            <Link href="/contact">
+              <button className="ml-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
+                Request a Service
+              </button>
+            </Link>{" "}
           </div>
 
           {/* Mobile Hamburger */}
