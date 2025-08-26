@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     title: "Shadilock Fabrications - Services",
     description:
       "Explore the wide range of fabrication and engineering services Shadilock Fabrications offers to meet your needs.",
-    url: "https://shadilock.com/services", // 🔁 update when domain is live
+    url: "https://shadilockfabrications.com/services",
     siteName: "Shadilock Fabrications",
     images: [
       {

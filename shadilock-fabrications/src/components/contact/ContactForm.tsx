@@ -26,7 +26,7 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="w-full bg-blue text-lightText px-6 md:px-12 lg:px-20 py-16">
+    <section className="w-full bg-blue text-blue px-6 md:px-12 lg:px-20 py-16">
       <div className="max-w-4xl mx-auto text-center mb-12">
         <div className="mb-6 flex justify-center">
           <Image
