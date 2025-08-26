@@ -10,7 +10,7 @@ export default function HeroContent() {
 
       {/* Heading */}
       <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 mt-8 text-orange">
-        Shadilock Fabication
+        Shadilock Fabrication
       </h1>
 
       {/* Paragraph */}
