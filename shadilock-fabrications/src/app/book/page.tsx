@@ -61,10 +61,10 @@ export default function BookingForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-darkBg p-6">
+    <div className="min-h-screen flex items-center justify-center bg-blue p-6">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-[#080023] text-lightText rounded-2xl shadow-xl p-8 space-y-6"
+        className="w-full max-w-lg bg-blueHover text-lightText rounded-2xl shadow-xl p-8 space-y-6"
       >
         <h2 className="text-2xl font-bold text-orange text-center">
           Book an Appointment

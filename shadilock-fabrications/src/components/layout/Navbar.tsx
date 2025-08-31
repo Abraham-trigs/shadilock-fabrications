@@ -70,9 +70,9 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <Link href="/contact">
+            <Link href="/book">
               <button className="ml-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
-                Request a Service
+                Book an Appointment
               </button>
             </Link>{" "}
           </div>
@@ -129,9 +129,11 @@ export default function Navbar() {
               </Link>
             ))}
 
-            <button className="w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
-              Request a Service
-            </button>
+            <Link href="/contact" className="ml-4">
+              <a className="w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
+                Book an Appointment
+              </a>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
