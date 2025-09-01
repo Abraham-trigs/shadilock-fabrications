@@ -4,15 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useDriveStore, DriveFile } from "@/lib/store/useDriveStore";
 
-const colors = {
-  blue: "#080023",
-  blueHover: "#15005c",
-  lightText: "#f4f4f4",
-  darkBg: "#1b1b1c",
-  success: "#4ade80",
-  error: "#f87171",
-  info: "#60a5fa",
-};
+type ToastType = "success" | "error" | "info";
 
 export default function Manage() {
   const { files, loading, fetchFiles, uploadFile, deleteFile, renameFile } =
@@ -25,20 +17,29 @@ export default function Manage() {
   } | null>(null);
   const [newFileName, setNewFileName] = useState("");
   const [toasts, setToasts] = useState<
-    { id: number; type: "success" | "error" | "info"; message: string }[]
+    { id: number; type: ToastType; message: string }[]
   >([]);
 
   // --- Toast helpers ---
-  const addToast = (
-    message: string,
-    type: "success" | "error" | "info" = "info"
-  ) => {
+  const addToast = (message: string, type: ToastType = "info") => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, type, message }]);
     setTimeout(
       () => setToasts((prev) => prev.filter((t) => t.id !== id)),
       4000
     );
+  };
+
+  const toastClasses = (type: ToastType) => {
+    switch (type) {
+      case "success":
+        return "bg-blue text-white";
+      case "error":
+        return "bg-orange text-white";
+      case "info":
+      default:
+        return "bg-blueHover text-white";
+    }
   };
 
   // --- Initial fetch ---
@@ -60,7 +61,7 @@ export default function Manage() {
         'input[type="file"]'
       ) as HTMLInputElement;
       if (fileInput) fileInput.value = "";
-    } catch (err) {
+    } catch {
       addToast("Upload failed", "error");
     }
   };
@@ -71,7 +72,7 @@ export default function Manage() {
     try {
       await deleteFile(id);
       addToast("File deleted successfully!", "success");
-    } catch (err) {
+    } catch {
       addToast("Delete failed", "error");
     }
   };
@@ -94,7 +95,7 @@ export default function Manage() {
       addToast("File renamed successfully!", "success");
       setEditingFile(null);
       setNewFileName("");
-    } catch (err) {
+    } catch {
       addToast("Rename failed", "error");
     }
   };
@@ -127,28 +128,17 @@ export default function Manage() {
       : null;
 
   return (
-    <div
-      className="p-6"
-      style={{ backgroundColor: colors.darkBg, minHeight: "100vh" }}
-    >
-      <h1 className="text-3xl mb-6" style={{ color: colors.lightText }}>
-        Manage Images
-      </h1>
+    <div className="p-6 min-h-screen bg-darkBg text-lightText">
+      <h1 className="text-3xl mb-6">Manage Images</h1>
 
       {/* Toasts */}
       <div className="fixed top-4 right-4 flex flex-col gap-2 z-50">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`px-4 py-2 rounded shadow-lg text-white transform transition-all duration-300 ease-in-out max-w-sm`}
-            style={{
-              backgroundColor:
-                toast.type === "success"
-                  ? colors.success
-                  : toast.type === "error"
-                  ? colors.error
-                  : colors.info,
-            }}
+            className={`px-4 py-2 rounded shadow-lg transform transition-all duration-300 max-w-sm ${toastClasses(
+              toast.type
+            )}`}
           >
             {toast.message}
           </div>
@@ -156,130 +146,110 @@ export default function Manage() {
       </div>
 
       {/* Upload section */}
-      <div
-        className="mb-8 p-6 rounded-lg"
-        style={{ backgroundColor: colors.blue }}
-      >
-        <h2 className="text-xl mb-4" style={{ color: colors.lightText }}>
-          Upload New Image
-        </h2>
+      <div className="mb-8 p-6 rounded-lg bg-blue">
+        <h2 className="text-xl mb-4">Upload New Image</h2>
         <div className="flex flex-col sm:flex-row gap-4 items-start">
           <input
             type="file"
             onChange={handleFileChange}
             accept="image/*"
-            className="flex-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:rounded"
+            className="flex-1 text-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:rounded"
           />
           <button
             onClick={handleUpload}
             disabled={!file || loading}
-            className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 bg-orange rounded text-white hover:bg-orangeHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? "Uploading..." : "Upload"}
           </button>
         </div>
         {file && (
-          <p className="mt-2 text-sm" style={{ color: colors.lightText }}>
+          <p className="mt-2 text-sm">
             Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
           </p>
         )}
       </div>
 
-      {/* Loading spinner */}
+      {/* Loading spinner / files grid */}
       {loading && files.length === 0 ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          <p className="mt-4" style={{ color: colors.lightText }}>
-            Loading images...
-          </p>
+          <p className="mt-4">Loading images...</p>
         </div>
       ) : files.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-xl" style={{ color: colors.lightText }}>
-            No images available.
-          </p>
+          <p className="text-xl">No images available.</p>
           <p className="mt-2 text-gray-400">
             Upload some images to get started!
           </p>
         </div>
       ) : (
-        <>
-          {/* Files Grid */}
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {files.map((file, index) => (
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {files.map((file, index) => (
+            <div
+              key={file.id}
+              className="rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl relative group bg-blue"
+            >
               <div
-                key={file.id}
-                className="rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl relative group"
-                style={{ backgroundColor: colors.blue }}
+                className="relative w-full h-48 cursor-pointer"
+                onClick={() => setSelectedIndex(index)}
               >
-                <div
-                  className="relative w-full h-48 cursor-pointer"
-                  onClick={() => setSelectedIndex(index)}
-                >
-                  <Image
-                    src={file.thumbnailLink || file.url}
-                    alt={file.name}
-                    fill
-                    className="object-cover rounded-t-lg transition-transform group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw,(max-width: 1200px) 50vw,25vw"
-                    unoptimized
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-t-lg" />
-                </div>
-
-                <div className="p-4">
-                  <h2
-                    className="text-lg font-semibold truncate mb-1"
-                    style={{ color: colors.lightText }}
-                    title={file.name}
-                  >
-                    {file.name}
-                  </h2>
-                  {file.mimeType && (
-                    <p
-                      style={{ color: colors.lightText, fontSize: "0.85rem" }}
-                      className="opacity-75"
-                    >
-                      {file.mimeType.replace("image/", "").toUpperCase()}
-                    </p>
-                  )}
-                  {file.modifiedTime && (
-                    <p
-                      style={{ color: colors.lightText, fontSize: "0.75rem" }}
-                      className="opacity-60 mt-1"
-                    >
-                      {new Date(file.modifiedTime).toLocaleDateString()}
-                    </p>
-                  )}
-                </div>
-
-                {/* Action buttons */}
-                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleStartEdit(file);
-                    }}
-                    className="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors shadow-lg"
-                    title="Rename file"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(file.id);
-                    }}
-                    className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 transition-colors shadow-lg"
-                    title="Delete file"
-                  >
-                    Delete
-                  </button>
-                </div>
+                <Image
+                  src={file.thumbnailLink || file.url}
+                  alt={file.name}
+                  fill
+                  className="object-cover rounded-t-lg transition-transform group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw,(max-width: 1200px) 50vw,25vw"
+                  unoptimized
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-t-lg" />
               </div>
-            ))}
-          </div>
-        </>
+
+              <div className="p-4">
+                <h2
+                  className="text-lg font-semibold truncate mb-1"
+                  title={file.name}
+                >
+                  {file.name}
+                </h2>
+                {file.mimeType && (
+                  <p className="text-[0.85rem] opacity-75">
+                    {file.mimeType.replace("image/", "").toUpperCase()}
+                  </p>
+                )}
+                {file.modifiedTime && (
+                  <p className="text-[0.75rem] opacity-60 mt-1">
+                    {new Date(file.modifiedTime).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+
+              {/* Action buttons */}
+              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleStartEdit(file);
+                  }}
+                  className="bg-blue text-white px-2 py-1 rounded text-xs hover:bg-blueHover transition-colors shadow-lg"
+                  title="Rename file"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(file.id);
+                  }}
+                  className="bg-orange text-white px-2 py-1 rounded text-xs hover:bg-orangeHover transition-colors shadow-lg"
+                  title="Delete file"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
       {/* Lightbox */}
@@ -330,12 +300,7 @@ export default function Manage() {
               />
             </div>
             <div className="mt-4 text-center max-w-2xl">
-              <p
-                className="text-lg font-semibold"
-                style={{ color: colors.lightText }}
-              >
-                {selectedFile.name}
-              </p>
+              <p className="text-lg font-semibold">{selectedFile.name}</p>
               <p className="text-sm text-gray-300 mt-1">
                 {selectedIndex! + 1} of {files.length}
                 {selectedFile.mimeType && ` • ${selectedFile.mimeType}`}

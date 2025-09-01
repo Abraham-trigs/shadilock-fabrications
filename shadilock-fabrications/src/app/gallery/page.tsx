@@ -4,13 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useDriveStore } from "@/lib/store/useDriveStore";
 
-const colors = {
-  blue: "#080023",
-  blueHover: "#15005c",
-  lightText: "#f4f4f4",
-  darkBg: "#1b1b1c",
-};
-
 export default function Gallery() {
   const { files, loading, fetchFiles } = useDriveStore();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -49,23 +42,16 @@ export default function Gallery() {
       : null;
 
   return (
-    <div
-      className="p-6"
-      style={{ backgroundColor: colors.darkBg, minHeight: "100vh" }}
-    >
-      <h1 className="text-3xl mb-6" style={{ color: colors.lightText }}>
-        Gallery
-      </h1>
+    <div className="p-6 min-h-screen bg-darkBg">
+      <h1 className="text-3xl mb-6 text-lightText">Gallery</h1>
 
       {loading && files.length === 0 ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          <p className="mt-4" style={{ color: colors.lightText }}>
-            Loading images...
-          </p>
+          <p className="mt-4 text-lightText">Loading images...</p>
         </div>
       ) : files.length === 0 ? (
-        <p style={{ color: colors.lightText }}>No files available.</p>
+        <p className="text-lightText">No files available.</p>
       ) : (
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {files.map((file, index) => {
@@ -77,8 +63,7 @@ export default function Gallery() {
               <div
                 key={file.id}
                 onClick={() => setSelectedIndex(index)}
-                className="cursor-pointer rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
-                style={{ backgroundColor: colors.blue }}
+                className="cursor-pointer rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 bg-blue"
               >
                 <div className="relative w-full h-48">
                   <Image
@@ -91,16 +76,13 @@ export default function Gallery() {
                   />
                 </div>
                 <div className="p-4">
-                  <h2
-                    className="text-lg font-semibold"
-                    style={{ color: colors.lightText }}
-                  >
+                  <h2 className="text-lg font-semibold text-lightText">
                     {file.name}
                   </h2>
-                  <p style={{ color: colors.lightText, fontSize: "0.85rem" }}>
+                  <p className="text-lightText text-sm">
                     Type: {file.mimeType || "Unknown"}
                   </p>
-                  <p style={{ color: colors.lightText, fontSize: "0.75rem" }}>
+                  <p className="text-lightText text-xs">
                     Updated: {updatedDate}
                   </p>
                 </div>
@@ -158,10 +140,7 @@ export default function Gallery() {
                 unoptimized
               />
             </div>
-            <p
-              className="mt-4 text-center text-lg"
-              style={{ color: colors.lightText }}
-            >
+            <p className="mt-4 text-center text-lg text-lightText">
               {selectedFile.name}
             </p>
           </div>
