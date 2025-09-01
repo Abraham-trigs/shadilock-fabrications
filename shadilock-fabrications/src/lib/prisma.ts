@@ -1,14 +1,16 @@
 // lib/prisma.ts
 import pkg from "@prisma/client";
-const { PrismaClient } = pkg;
 
-// Extend globalThis to avoid multiple instances in dev
+// Cast PrismaClient as the correct type
+const PrismaClient = pkg.PrismaClient as unknown as { new (): pkg.PrismaClient };
+
 declare global {
   // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var prisma: pkg.PrismaClient | undefined;
 }
 
-const prisma = globalThis.prisma || new PrismaClient();
+// Use global prisma to prevent multiple instances during hot reload
+const prisma: pkg.PrismaClient = globalThis.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
 
