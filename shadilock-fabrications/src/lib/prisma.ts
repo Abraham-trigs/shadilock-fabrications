@@ -1,5 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+// lib/prisma.ts
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
 
+// Extend globalThis to avoid multiple instances in dev
 declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
