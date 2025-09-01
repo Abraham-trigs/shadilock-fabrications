@@ -1,43 +1,116 @@
-// app/api/upload/route.ts
+// app/api/google/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
-import { Readable } from "stream";
+import path from "path";
 
-const FOLDER_ID = "187ZD5xwmakTCKN3uFA0yI4sfSihVpp-X"; // Your shared folder ID
-
-// Google Drive auth using your service account JSON
+// Auth setup with service account
 const auth = new google.auth.GoogleAuth({
-  keyFile: "./keys/shadilock-fabrications.json", // adjust path
-  scopes: ["https://www.googleapis.com/auth/drive.file"],
+  keyFile: path.join(process.cwd(), "service-account.json"),
+  scopes: ["https://www.googleapis.com/auth/drive"],
 });
 
 const drive = google.drive({ version: "v3", auth });
 
-export const POST = async (req: NextRequest) => {
+const FOLDER_ID = "187ZD5xwmakTCKN3uFA0yI4sfSihVpp-X";
+
+// --- CRUD API ---
+export async function GET(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
+    const { searchParams } = new URL(req.url);
+    const fileId = searchParams.get("fileId");
 
-    if (!file) return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    if (fileId) {
+      // Single file
+      const res = await drive.files.get({
+        fileId,
+        fields: "id, name, mimeType, modifiedTime",
+      });
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+      const file = res.data;
+      return NextResponse.json({
+        ...file,
+        url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+      });
+    } else {
+      // List files in folder
+      const res = await drive.files.list({
+        q: `'${FOLDER_ID}' in parents and trashed=false`,
+        fields: "files(id, name, mimeType, modifiedTime)",
+      });
 
-    // Upload to Google Drive
-    const uploadedFile = await drive.files.create({
+      const files = (res.data.files || []).map((file) => ({
+        ...file,
+        url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+      }));
+
+      return NextResponse.json({ files });
+    }
+  } catch (error) {
+    console.error("GET error:", error);
+    return NextResponse.json({ error: "Failed to fetch files" }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { name, mimeType, parents } = body;
+
+    const res = await drive.files.create({
       requestBody: {
-        name: file.name,
-        parents: [FOLDER_ID],
+        name,
+        mimeType,
+        parents: parents || [FOLDER_ID],
       },
-      media: {
-        mimeType: file.type,
-        body: Readable.from(buffer),
-      },
-      fields: "id, name",
+      fields: "id, name, mimeType, modifiedTime",
     });
 
-    return NextResponse.json({ success: true, file: uploadedFile.data });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    const file = res.data;
+    return NextResponse.json({
+      ...file,
+      url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+    });
+  } catch (error) {
+    console.error("POST error:", error);
+    return NextResponse.json({ error: "Failed to create file" }, { status: 500 });
   }
-};
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { fileId, newName } = body;
+
+    const res = await drive.files.update({
+      fileId,
+      requestBody: { name: newName },
+      fields: "id, name, mimeType, modifiedTime",
+    });
+
+    const file = res.data;
+    return NextResponse.json({
+      ...file,
+      url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+    });
+  } catch (error) {
+    console.error("PUT error:", error);
+    return NextResponse.json({ error: "Failed to update file" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const fileId = searchParams.get("fileId");
+
+    if (!fileId) {
+      return NextResponse.json({ error: "Missing fileId" }, { status: 400 });
+    }
+
+    await drive.files.delete({ fileId });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("DELETE error:", error);
+    return NextResponse.json({ error: "Failed to delete file" }, { status: 500 });
+  }
+}
