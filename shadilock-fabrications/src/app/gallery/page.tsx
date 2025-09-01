@@ -2,48 +2,25 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-
-interface DriveFile {
-  id: string;
-  name: string;
-  mimeType: string;
-  modifiedTime: string;
-  url: string;
-}
+import { useDriveStore, DriveFile } from "@/lib/store/useDriveStore";
 
 const colors = {
   blue: "#080023",
   blueHover: "#15005c",
-  orange: "#ff7800",
-  orangeHover: "#8a4100",
   lightText: "#f4f4f4",
   darkBg: "#1b1b1c",
 };
 
 export default function Gallery() {
-  const [files, setFiles] = useState<DriveFile[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { files, loading, fetchFiles } = useDriveStore();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  // Fetch files from API
-  const loadFiles = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/google");
-      const data = await res.json();
-      setFiles(data.files || []);
-    } catch (err) {
-      console.error("Failed to load files:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // --- Initial fetch ---
   useEffect(() => {
-    loadFiles();
-  }, []);
+    fetchFiles();
+  }, [fetchFiles]);
 
-  // Navigation functions
+  // --- Lightbox navigation ---
   const handleNext = useCallback(() => {
     setSelectedIndex((prev) =>
       prev !== null && prev < files.length - 1 ? prev + 1 : prev
@@ -54,7 +31,7 @@ export default function Gallery() {
     setSelectedIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
   }, []);
 
-  // Keyboard navigation
+  // --- Keyboard navigation ---
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedIndex === null) return;
@@ -80,8 +57,13 @@ export default function Gallery() {
         Gallery
       </h1>
 
-      {loading ? (
-        <p style={{ color: colors.lightText }}>Loading...</p>
+      {loading && files.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          <p className="mt-4" style={{ color: colors.lightText }}>
+            Loading images...
+          </p>
+        </div>
       ) : files.length === 0 ? (
         <p style={{ color: colors.lightText }}>No files available.</p>
       ) : (
@@ -95,13 +77,12 @@ export default function Gallery() {
             >
               <div className="relative w-full h-48">
                 <Image
-                  src={file.url}
+                  src={file.thumbnailLink || file.url}
                   alt={file.name}
                   fill
                   className="object-cover rounded-lg"
-                  sizes="(max-width: 768px) 100vw,
-                         (max-width: 1200px) 50vw,
-                         25vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  unoptimized
                 />
               </div>
               <div className="p-4">
@@ -123,7 +104,7 @@ export default function Gallery() {
         </div>
       )}
 
-      {/* Lightbox / Modal */}
+      {/* Lightbox */}
       {selectedFile && (
         <div
           onClick={() => setSelectedIndex(null)}
@@ -168,6 +149,7 @@ export default function Gallery() {
                 fill
                 className="object-contain rounded-lg"
                 sizes="100vw"
+                unoptimized
               />
             </div>
             <p

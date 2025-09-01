@@ -1,208 +1,349 @@
-// app/manage-image/page.tsx
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
+import { useDriveStore, DriveFile } from "@/lib/store/useDriveStore";
 
-interface DriveFile {
-  id: string;
-  name: string;
-  mimeType: string;
-  modifiedTime: string;
-  url: string;
-}
+const colors = {
+  blue: "#080023",
+  blueHover: "#15005c",
+  lightText: "#f4f4f4",
+  darkBg: "#1b1b1c",
+  success: "#4ade80",
+  error: "#f87171",
+  info: "#60a5fa",
+};
 
-export default function ManageImage() {
-  const [files, setFiles] = useState<DriveFile[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+export default function Manage() {
+  const { files, loading, fetchFiles, uploadFile, deleteFile, renameFile } =
+    useDriveStore();
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [editingFile, setEditingFile] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [newFileName, setNewFileName] = useState("");
+  const [toasts, setToasts] = useState<
+    { id: number; type: "success" | "error" | "info"; message: string }[]
+  >([]);
 
-  const showToast = (message: string) => {
-    setToast(message);
-    setTimeout(() => setToast(null), 3000);
+  // --- Toast helpers ---
+  const addToast = (
+    message: string,
+    type: "success" | "error" | "info" = "info"
+  ) => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, type, message }]);
+    setTimeout(
+      () => setToasts((prev) => prev.filter((t) => t.id !== id)),
+      4000
+    );
   };
 
-  const loadFiles = useCallback(async () => {
-    setLoading(true);
+  // --- Initial fetch ---
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
+
+  // --- File upload ---
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setFile(e.target.files?.[0] ?? null);
+
+  const handleUpload = async () => {
+    if (!file) return;
     try {
-      const res = await fetch("/api/google");
-      const data = await res.json();
-      setFiles(data.files || []);
+      await uploadFile(file);
+      addToast("File uploaded successfully!", "success");
+      setFile(null);
+      const fileInput = document.querySelector(
+        'input[type="file"]'
+      ) as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
     } catch (err) {
-      console.error(err);
-      setFiles([]);
-      showToast("Failed to load files!");
-    } finally {
-      setLoading(false);
+      addToast("Upload failed", "error");
     }
+  };
+
+  // --- File delete ---
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this file?")) return;
+    try {
+      await deleteFile(id);
+      addToast("File deleted successfully!", "success");
+    } catch (err) {
+      addToast("Delete failed", "error");
+    }
+  };
+
+  // --- File rename ---
+  const handleStartEdit = (file: DriveFile) => {
+    setEditingFile({ id: file.id, name: file.name });
+    setNewFileName(file.name);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingFile(null);
+    setNewFileName("");
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingFile || !newFileName.trim()) return;
+    try {
+      await renameFile(editingFile.id, newFileName.trim());
+      addToast("File renamed successfully!", "success");
+      setEditingFile(null);
+      setNewFileName("");
+    } catch (err) {
+      addToast("Rename failed", "error");
+    }
+  };
+
+  // --- Lightbox navigation ---
+  const handleNext = useCallback(() => {
+    setSelectedIndex((prev) =>
+      prev !== null && prev < files.length - 1 ? prev + 1 : prev
+    );
+  }, [files]);
+
+  const handlePrev = useCallback(() => {
+    setSelectedIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
   }, []);
 
   useEffect(() => {
-    loadFiles();
-  }, [loadFiles]);
-
-  const uploadFile = async () => {
-    if (!selectedFile) {
-      showToast("Please select a file to upload!");
-      return;
-    }
-
-    setUploading(true);
-    setUploadProgress(0);
-
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/google");
-
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percent = Math.round((event.loaded / event.total) * 100);
-        setUploadProgress(percent);
-      }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "Escape") setSelectedIndex(null);
     };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, handleNext, handlePrev]);
 
-    xhr.onload = () => {
-      setUploading(false);
-      setUploadProgress(0);
-      if (xhr.status === 200) {
-        const data = JSON.parse(xhr.responseText);
-        if (data.success) {
-          setSelectedFile(null);
-          loadFiles();
-          showToast("File uploaded successfully!");
-        } else {
-          showToast(data.error || "Upload failed!");
-        }
-      } else {
-        showToast("Upload failed due to network error!");
-      }
-    };
-
-    xhr.onerror = () => {
-      setUploading(false);
-      setUploadProgress(0);
-      showToast("Upload failed due to network error!");
-    };
-
-    xhr.send(formData);
-  };
-
-  const deleteFile = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this file?")) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/google?id=${id}`, { method: "DELETE" });
-      const data = await res.json();
-      if (data.success) loadFiles();
-      else showToast(data.error || "Delete failed!");
-    } catch (err) {
-      console.error(err);
-      showToast("Delete failed!");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const selectedFile =
+    selectedIndex !== null && selectedIndex >= 0 && selectedIndex < files.length
+      ? files[selectedIndex]
+      : null;
 
   return (
-    <div className="p-6 min-h-screen bg-darkBg">
-      <h1 className="text-3xl mb-6 text-lightText font-bold">Manage Images</h1>
+    <div
+      className="p-6"
+      style={{ backgroundColor: colors.darkBg, minHeight: "100vh" }}
+    >
+      <h1 className="text-3xl mb-6" style={{ color: colors.lightText }}>
+        Manage Images
+      </h1>
 
-      {/* Upload Section */}
-      <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center relative">
-        <input
-          type="file"
-          onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-          className="text-lightText"
-        />
-        <div className="flex flex-col items-start">
-          <button
-            onClick={uploadFile}
-            disabled={uploading}
-            className="px-4 py-2 rounded transition-colors duration-200 bg-orange hover:bg-orangeHover text-lightText disabled:opacity-60"
+      {/* Toasts */}
+      <div className="fixed top-4 right-4 flex flex-col gap-2 z-50">
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`px-4 py-2 rounded shadow-lg text-white transform transition-all duration-300 ease-in-out max-w-sm`}
+            style={{
+              backgroundColor:
+                toast.type === "success"
+                  ? colors.success
+                  : toast.type === "error"
+                  ? colors.error
+                  : colors.info,
+            }}
           >
-            {uploading ? "Uploading..." : "Upload"}
-          </button>
-
-          {/* Upload progress bar */}
-          {uploading && (
-            <div className="w-full mt-2 h-2 rounded bg-gray-700">
-              <div
-                className="h-2 rounded transition-all bg-orange"
-                style={{ width: `${uploadProgress}%` }}
-              ></div>
-            </div>
-          )}
-
-          {/* Toast */}
-          {toast && (
-            <div className="mt-2 px-4 py-2 rounded shadow-lg animate-slideDown bg-blueHover text-lightText">
-              {toast}
-            </div>
-          )}
-        </div>
+            {toast.message}
+          </div>
+        ))}
       </div>
 
-      {/* Image Grid */}
-      {loading ? (
-        <p className="text-lightText">Loading...</p>
+      {/* Upload section */}
+      <div
+        className="mb-8 p-6 rounded-lg"
+        style={{ backgroundColor: colors.blue }}
+      >
+        <h2 className="text-xl mb-4" style={{ color: colors.lightText }}>
+          Upload New Image
+        </h2>
+        <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+            className="flex-1 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:rounded"
+          />
+          <button
+            onClick={handleUpload}
+            disabled={!file || loading}
+            className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {loading ? "Uploading..." : "Upload"}
+          </button>
+        </div>
+        {file && (
+          <p className="mt-2 text-sm" style={{ color: colors.lightText }}>
+            Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+          </p>
+        )}
+      </div>
+
+      {/* Loading spinner */}
+      {loading && files.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          <p className="mt-4" style={{ color: colors.lightText }}>
+            Loading images...
+          </p>
+        </div>
       ) : files.length === 0 ? (
-        <p className="text-lightText">No images found.</p>
+        <div className="text-center py-12">
+          <p className="text-xl" style={{ color: colors.lightText }}>
+            No images available.
+          </p>
+          <p className="mt-2 text-gray-400">
+            Upload some images to get started!
+          </p>
+        </div>
       ) : (
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {files.map((file) => (
-            <div
-              key={file.id}
-              className="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform flex flex-col bg-blue"
-            >
-              <img
-                src={file.url}
-                alt={file.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4 flex flex-col flex-1 justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-lightText">
+        <>
+          {/* Files Grid */}
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {files.map((file, index) => (
+              <div
+                key={file.id}
+                className="rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl relative group"
+                style={{ backgroundColor: colors.blue }}
+              >
+                <div
+                  className="relative w-full h-48 cursor-pointer"
+                  onClick={() => setSelectedIndex(index)}
+                >
+                  <Image
+                    src={file.thumbnailLink || file.url}
+                    alt={file.name}
+                    fill
+                    className="object-cover rounded-t-lg transition-transform group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw,(max-width: 1200px) 50vw,25vw"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-t-lg" />
+                </div>
+
+                <div className="p-4">
+                  <h2
+                    className="text-lg font-semibold truncate mb-1"
+                    style={{ color: colors.lightText }}
+                    title={file.name}
+                  >
                     {file.name}
                   </h2>
-                  <p className="text-lightText text-sm">
-                    Type: {file.mimeType}
-                  </p>
-                  <p className="text-lightText text-xs">
-                    Updated: {new Date(file.modifiedTime).toLocaleDateString()}
-                  </p>
+                  {file.mimeType && (
+                    <p
+                      style={{ color: colors.lightText, fontSize: "0.85rem" }}
+                      className="opacity-75"
+                    >
+                      {file.mimeType.replace("image/", "").toUpperCase()}
+                    </p>
+                  )}
+                  {file.modifiedTime && (
+                    <p
+                      style={{ color: colors.lightText, fontSize: "0.75rem" }}
+                      className="opacity-60 mt-1"
+                    >
+                      {new Date(file.modifiedTime).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
-                <button
-                  onClick={() => deleteFile(file.id)}
-                  className="mt-4 px-3 py-1 rounded font-semibold text-white transition-colors bg-orange hover:bg-orangeHover"
-                >
-                  Delete
-                </button>
+
+                {/* Action buttons */}
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStartEdit(file);
+                    }}
+                    className="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors shadow-lg"
+                    title="Rename file"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(file.id);
+                    }}
+                    className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 transition-colors shadow-lg"
+                    title="Delete file"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       )}
 
-      {/* Toast Animation */}
-      <style jsx>{`
-        .animate-slideDown {
-          animation: slideDown 0.3s ease-out forwards;
-        }
-        @keyframes slideDown {
-          0% {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+      {/* Lightbox */}
+      {selectedFile && (
+        <div
+          onClick={() => setSelectedIndex(null)}
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+        >
+          <div
+            className="relative max-w-6xl w-full px-4 flex flex-col items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedIndex(null)}
+              className="absolute -top-12 right-4 text-white text-3xl font-bold z-50 hover:text-gray-300 transition-colors"
+              title="Close (Esc)"
+            >
+              ✕
+            </button>
+
+            {selectedIndex! > 0 && (
+              <button
+                onClick={handlePrev}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-4xl font-bold z-50 hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center"
+                title="Previous (←)"
+              >
+                ‹
+              </button>
+            )}
+            {selectedIndex! < files.length - 1 && (
+              <button
+                onClick={handleNext}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-4xl font-bold z-50 hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center"
+                title="Next (→)"
+              >
+                ›
+              </button>
+            )}
+
+            <div className="relative w-full max-h-[80vh] h-[70vh]">
+              <Image
+                src={selectedFile.url}
+                alt={selectedFile.name}
+                fill
+                className="object-contain rounded-lg"
+                sizes="100vw"
+                unoptimized
+              />
+            </div>
+            <div className="mt-4 text-center max-w-2xl">
+              <p
+                className="text-lg font-semibold"
+                style={{ color: colors.lightText }}
+              >
+                {selectedFile.name}
+              </p>
+              <p className="text-sm text-gray-300 mt-1">
+                {selectedIndex! + 1} of {files.length}
+                {selectedFile.mimeType && ` • ${selectedFile.mimeType}`}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
