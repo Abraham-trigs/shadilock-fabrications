@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { useDriveStore, DriveFile } from "@/lib/store/useDriveStore";
+import { useDriveStore } from "@/lib/store/useDriveStore";
 
 const colors = {
   blue: "#080023",
@@ -68,39 +68,45 @@ export default function Gallery() {
         <p style={{ color: colors.lightText }}>No files available.</p>
       ) : (
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {files.map((file, index) => (
-            <div
-              key={file.id}
-              onClick={() => setSelectedIndex(index)}
-              className="cursor-pointer rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
-              style={{ backgroundColor: colors.blue }}
-            >
-              <div className="relative w-full h-48">
-                <Image
-                  src={file.thumbnailLink || file.url}
-                  alt={file.name}
-                  fill
-                  className="object-cover rounded-lg"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  unoptimized
-                />
+          {files.map((file, index) => {
+            const updatedDate = file.modifiedTime
+              ? new Date(file.modifiedTime).toLocaleDateString()
+              : "N/A";
+
+            return (
+              <div
+                key={file.id}
+                onClick={() => setSelectedIndex(index)}
+                className="cursor-pointer rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+                style={{ backgroundColor: colors.blue }}
+              >
+                <div className="relative w-full h-48">
+                  <Image
+                    src={file.thumbnailLink || file.url}
+                    alt={file.name}
+                    fill
+                    className="object-cover rounded-lg"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    unoptimized
+                  />
+                </div>
+                <div className="p-4">
+                  <h2
+                    className="text-lg font-semibold"
+                    style={{ color: colors.lightText }}
+                  >
+                    {file.name}
+                  </h2>
+                  <p style={{ color: colors.lightText, fontSize: "0.85rem" }}>
+                    Type: {file.mimeType || "Unknown"}
+                  </p>
+                  <p style={{ color: colors.lightText, fontSize: "0.75rem" }}>
+                    Updated: {updatedDate}
+                  </p>
+                </div>
               </div>
-              <div className="p-4">
-                <h2
-                  className="text-lg font-semibold"
-                  style={{ color: colors.lightText }}
-                >
-                  {file.name}
-                </h2>
-                <p style={{ color: colors.lightText, fontSize: "0.85rem" }}>
-                  Type: {file.mimeType}
-                </p>
-                <p style={{ color: colors.lightText, fontSize: "0.75rem" }}>
-                  Updated: {new Date(file.modifiedTime).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -123,7 +129,7 @@ export default function Gallery() {
             </button>
 
             {/* Prev button */}
-            {selectedIndex > 0 && (
+            {selectedIndex !== null && selectedIndex > 0 && (
               <button
                 onClick={handlePrev}
                 className="absolute left-4 text-white text-4xl font-bold z-50"
@@ -133,7 +139,7 @@ export default function Gallery() {
             )}
 
             {/* Next button */}
-            {selectedIndex < files.length - 1 && (
+            {selectedIndex !== null && selectedIndex < files.length - 1 && (
               <button
                 onClick={handleNext}
                 className="absolute right-4 text-white text-4xl font-bold z-50"

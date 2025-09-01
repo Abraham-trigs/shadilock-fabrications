@@ -6,26 +6,31 @@ export interface DriveFile {
   mimeType?: string;
   modifiedTime?: string;
   url: string;
-  thumbnailLink?: string; // optional thumbnail for grid view
+  thumbnailLink?: string;
 }
 
 interface DriveState {
   files: DriveFile[];
   loading: boolean;
   error?: string;
+  success?: string;
   fetchFiles: () => Promise<void>;
   uploadFile: (file: File) => Promise<void>;
   deleteFile: (id: string) => Promise<void>;
   renameFile: (id: string, newName: string) => Promise<void>;
+  clearMessages: () => void;
 }
 
 export const useDriveStore = create<DriveState>((set, get) => ({
   files: [],
   loading: false,
   error: undefined,
+  success: undefined,
+
+  clearMessages: () => set({ error: undefined, success: undefined }),
 
   fetchFiles: async () => {
-    set({ loading: true, error: undefined });
+    set({ loading: true, error: undefined, success: undefined });
     try {
       const res = await fetch("/api/google");
       if (!res.ok) throw new Error("Failed to fetch files");
@@ -48,14 +53,18 @@ export const useDriveStore = create<DriveState>((set, get) => ({
   },
 
   uploadFile: async (file: File) => {
-    set({ loading: true });
+    set({ loading: true, error: undefined, success: undefined });
     try {
       const formData = new FormData();
       formData.append("file", file);
+
       const res = await fetch("/api/google", { method: "POST", body: formData });
       if (!res.ok) throw new Error("Upload failed");
+
       await get().fetchFiles();
+      set({ success: `${file.name} uploaded successfully!` });
     } catch (err: any) {
+      set({ error: err.message || "Upload error" });
       console.error("Drive uploadFile error:", err);
     } finally {
       set({ loading: false });
@@ -63,12 +72,15 @@ export const useDriveStore = create<DriveState>((set, get) => ({
   },
 
   deleteFile: async (id: string) => {
-    set({ loading: true });
+    set({ loading: true, error: undefined, success: undefined });
     try {
       const res = await fetch(`/api/google/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Delete failed");
+
       await get().fetchFiles();
+      set({ success: `File deleted successfully!` });
     } catch (err: any) {
+      set({ error: err.message || "Delete error" });
       console.error("Drive deleteFile error:", err);
     } finally {
       set({ loading: false });
@@ -76,7 +88,7 @@ export const useDriveStore = create<DriveState>((set, get) => ({
   },
 
   renameFile: async (id: string, newName: string) => {
-    set({ loading: true });
+    set({ loading: true, error: undefined, success: undefined });
     try {
       const res = await fetch(`/api/google/${id}`, {
         method: "PUT",
@@ -84,8 +96,11 @@ export const useDriveStore = create<DriveState>((set, get) => ({
         body: JSON.stringify({ name: newName }),
       });
       if (!res.ok) throw new Error("Rename failed");
+
       await get().fetchFiles();
+      set({ success: `File renamed to "${newName}"` });
     } catch (err: any) {
+      set({ error: err.message || "Rename error" });
       console.error("Drive renameFile error:", err);
     } finally {
       set({ loading: false });

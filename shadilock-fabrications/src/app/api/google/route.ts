@@ -9,7 +9,7 @@ const auth = new google.auth.GoogleAuth({
 });
 
 const drive = google.drive({ version: "v3", auth });
-const FOLDER_ID = "187ZD5xwmakTCKN3uFA0yI4sfSihVpp-X";
+const FOLDER_ID = "187ZD5xwmakTCKN3uFA0yI4sfSihVpp-X"; // Your shared folder ID
 
 // --- GET all files ---
 export async function GET(req: NextRequest) {
@@ -20,18 +20,6 @@ export async function GET(req: NextRequest) {
     });
 
     const files = res.data.files || [];
-
-    // Make all files public if not already
-    for (const file of files) {
-      try {
-        await drive.permissions.create({
-          fileId: file.id!,
-          requestBody: { role: "reader", type: "anyone" },
-        });
-      } catch {
-        // Already public
-      }
-    }
 
     return NextResponse.json({
       files: files.map((file) => ({
@@ -91,6 +79,7 @@ export async function POST(req: NextRequest) {
       modifiedTime: res.data.modifiedTime,
       thumbnailLink: res.data.thumbnailLink,
       url: `https://drive.google.com/uc?export=view&id=${res.data.id}`,
+      message: "File uploaded successfully!",
     });
   } catch (error) {
     console.error("POST error:", error);
