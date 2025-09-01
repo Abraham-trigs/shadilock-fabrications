@@ -4,15 +4,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**.googleusercontent.com", // covers drive proxy URLs
+        hostname: "lh3.googleusercontent.com", // Google Drive thumbnails
       },
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com", // common for Drive thumbnails
-      },
-      {
-        protocol: "https",
-        hostname: "drive.google.com", // if using direct share links
+        hostname: "drive.google.com", // Fallback direct links
       },
     ],
   },
