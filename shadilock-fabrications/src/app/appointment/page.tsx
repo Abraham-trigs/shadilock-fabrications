@@ -56,7 +56,7 @@ export default function AppointmentPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-darkBg text-lightText">
+      <div className="min-h-screen flex items-center justify-center bg-blue text-lightText">
         Loading appointments...
       </div>
     );
@@ -64,14 +64,14 @@ export default function AppointmentPage() {
 
   if (!appointments.length) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-darkBg text-lightText">
+      <div className="min-h-screen flex items-center justify-center bg-blue text-lightText">
         No appointments found.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-darkBg p-6">
+    <div className="min-h-screen bg-orange p-6">
       <h1 className="text-3xl font-bold text-orange mb-6 text-center">
         Appointments
       </h1>
@@ -84,7 +84,7 @@ export default function AppointmentPage() {
           onChange={(e) =>
             setSortOrder(e.target.value as "earliest" | "latest")
           }
-          className="p-2 rounded-lg bg-blue text-lightText focus:outline-none"
+          className="p-2 rounded-lg bg-orange text-blue focus:outline-none"
         >
           <option value="earliest">Earliest First</option>
           <option value="latest">Latest First</option>
@@ -110,7 +110,7 @@ export default function AppointmentPage() {
           return (
             <div
               key={appt.id}
-              className="p-4 rounded-xl shadow-md bg-blue hover:bg-blueHover transition-colors text-lightText"
+              className="p-4 rounded-xl shadow-md bg-blue text-lightText hover:bg-blueHover transition-colors "
             >
               <p>
                 <span className="font-semibold">Name:</span> {appt.name}

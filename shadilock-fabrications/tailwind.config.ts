@@ -6,6 +6,10 @@ const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+
+
+
+
       colors: {
         blue: "#080023",
         blueHover: "#15005c",
