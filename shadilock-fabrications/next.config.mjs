@@ -1,21 +1,27 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com", // Google Drive thumbnails
+        hostname: "lh3.googleusercontent.com", // Direct Google thumbnails
       },
       {
         protocol: "https",
         hostname: "drive.google.com", // Fallback direct links
       },
+      {
+        protocol: "https",
+        hostname: "docs.google.com", // Docs-based links
+      },
     ],
   },
+
   async redirects() {
     return [
       {
-        // Redirect www → non-www
         source: "/(.*)",
         has: [
           {

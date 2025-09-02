@@ -16,9 +16,9 @@ export default function Gallery() {
   // --- Initial fetch ---
   useEffect(() => {
     fetchFiles(page, pageSize);
-  }, [fetchFiles, page, pageSize]); // ✅ fixed dependencies
+  }, [fetchFiles, page, pageSize]);
 
-  // --- Lightbox navigation ---
+  // --- Navigation ---
   const handleNextImage = useCallback(() => {
     setSelectedIndex((prev) =>
       prev !== null && prev < files.length - 1 ? prev + 1 : prev
@@ -46,6 +46,7 @@ export default function Gallery() {
       ? files[selectedIndex]
       : null;
 
+  // --- Pagination helpers ---
   const handlePrevPage = () => {
     if (page > 1) fetchFiles(page - 1, pageSize);
   };
@@ -61,7 +62,7 @@ export default function Gallery() {
         <button
           onClick={handlePrevPage}
           disabled={page <= 1}
-          className="px-3 py-1 bg-darkBg border border-lightText rounded-full disabled:opacity-50 hover:bg-blue hover:text-white transition"
+          className="px-3 py-1 bg-lightText border hover:border-lightText border-orange text-orange font-black rounded-full disabled:opacity-50 hover:bg-blueHover hover:text-white transition"
         >
           ‹
         </button>
@@ -73,8 +74,8 @@ export default function Gallery() {
             className={`px-3 py-1 rounded-full border border-lightText transition
               ${
                 p === page
-                  ? "bg-blue text-white"
-                  : "hover:bg-blue hover:text-white"
+                  ? "bg-orange text-white"
+                  : "hover:bg-blue hover:text-white text-orange"
               }`}
           >
             {p}
@@ -84,7 +85,7 @@ export default function Gallery() {
         <button
           onClick={handleNextPage}
           disabled={page >= totalPages}
-          className="px-3 py-1 bg-darkBg border border-lightText rounded-full disabled:opacity-50 hover:bg-blue hover:text-white transition"
+          className="px-3 py-1 bg-lightText border hover:border-lightText border-orange text-orange font-black rounded-full disabled:opacity-50 hover:bg-blueHover hover:text-white transition"
         >
           ›
         </button>
@@ -93,7 +94,7 @@ export default function Gallery() {
   };
 
   return (
-    <div className="p-6 min-h-screen bg-darkBg">
+    <div className="p-6 min-h-screen ">
       <h1 className="text-3xl mb-6 text-lightText">Gallery</h1>
 
       {loading && files.length === 0 ? (
@@ -123,7 +124,7 @@ export default function Gallery() {
                 >
                   <div className="relative w-full h-48">
                     <Image
-                      src={file.thumbnailLink || file.url}
+                      src={file.thumbnail}
                       alt={file.name}
                       fill
                       className="object-cover rounded-lg"
@@ -199,7 +200,7 @@ export default function Gallery() {
 
               <div className="relative w-full max-h-[80vh] h-[70vh]">
                 <Image
-                  src={selectedFile.url}
+                  src={selectedFile.thumbnail}
                   alt={selectedFile.name}
                   fill
                   className="object-contain rounded-lg"

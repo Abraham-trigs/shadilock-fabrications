@@ -1,4 +1,4 @@
-"use server"; // ensure this is server-side only
+"use server";
 
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
@@ -16,6 +16,10 @@ const drive = google.drive({ version: "v3", auth });
 // --- Shared folder ID ---
 const FOLDER_ID = "187ZD5xwmakTCKN3uFA0yI4sfSihVpp-X";
 
+// --- Helper: build direct Googleusercontent URL ---
+const getDirectImageUrl = (fileId: string) =>
+  `https://lh3.googleusercontent.com/d/${fileId}=w2000-h2000-no`;
+
 // --- GET all files in folder with pagination ---
 export async function GET(req: NextRequest) {
   try {
@@ -23,28 +27,29 @@ export async function GET(req: NextRequest) {
     const page = parseInt(url.searchParams.get("page") || "1", 10);
     const pageSize = parseInt(url.searchParams.get("pageSize") || "20", 10);
 
-    // Fetch all files
+    // Fetch files
     const res = await drive.files.list({
       q: `'${FOLDER_ID}' in parents and trashed=false`,
       fields: "files(id, name, mimeType, modifiedTime, thumbnailLink)",
-      pageSize: 1000, // fetch max allowed from Drive
+      pageSize: 1000,
     });
 
     const allFiles = res.data.files || [];
     const totalFiles = allFiles.length;
 
-    // Slice files for pagination
+    // Paginate
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const pagedFiles = allFiles.slice(startIndex, endIndex);
 
+    // Format
     const formattedFiles = pagedFiles.map((file) => ({
       id: file.id!,
       name: file.name!,
       mimeType: file.mimeType,
       modifiedTime: file.modifiedTime,
-      thumbnailLink: file.thumbnailLink,
-      url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+      thumbnail: getDirectImageUrl(file.id!), // always usable
+      url: `https://drive.google.com/uc?export=view&id=${file.id}`, // fallback viewer
     }));
 
     return NextResponse.json({ files: formattedFiles, totalFiles });
@@ -66,7 +71,9 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("file") as File;
 
-    if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const stream = Readable.from(buffer);
@@ -80,9 +87,13 @@ export async function POST(req: NextRequest) {
     });
 
     const fileId = res.data.id!;
-    // Make file publicly readable
+
+    // Make file public
     try {
-      await drive.permissions.create({ fileId, requestBody: { role: "reader", type: "anyone" } });
+      await drive.permissions.create({
+        fileId,
+        requestBody: { role: "reader", type: "anyone" },
+      });
     } catch (permError) {
       console.warn("Failed to set public permission:", permError);
     }
@@ -92,14 +103,17 @@ export async function POST(req: NextRequest) {
       name: res.data.name!,
       mimeType: res.data.mimeType,
       modifiedTime: res.data.modifiedTime,
-      thumbnailLink: res.data.thumbnailLink,
+      thumbnail: getDirectImageUrl(fileId),
       url: `https://drive.google.com/uc?export=view&id=${fileId}`,
       message: "File uploaded successfully!",
     });
   } catch (error) {
     console.error("POST upload error:", error);
     return NextResponse.json(
-      { error: "Failed to upload file", details: error instanceof Error ? error.message : "Unknown error" },
+      {
+        error: "Failed to upload file",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
