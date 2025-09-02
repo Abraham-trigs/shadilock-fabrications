@@ -4,11 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 import path from "path";
 
+
+
+
 // --- Google Drive Auth ---
 const auth = new google.auth.GoogleAuth({
   keyFile: path.join(process.cwd(), "service-account.json"),
   scopes: ["https://www.googleapis.com/auth/drive"],
 });
+
+
+
 
 const drive = google.drive({ version: "v3", auth });
 
@@ -21,6 +27,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       fileId,
       fields: "id, name, mimeType, modifiedTime, thumbnailLink",
     });
+
+
+
+
 
     const file = res.data;
     return NextResponse.json({
@@ -35,6 +45,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     );
   }
 }
+
+
+
+
 
 // --- DELETE specific file ---
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
