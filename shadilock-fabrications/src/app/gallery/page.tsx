@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useDriveStore } from "@/lib/store/useDriveStore";
 import { motion, AnimatePresence } from "framer-motion";
+import { getDriveThumbnail, extractDriveFileId } from "@/utils/drive";
 
 export default function Gallery() {
   const { files, loading, page, totalFiles, pageSize, fetchFiles } =
@@ -16,9 +17,9 @@ export default function Gallery() {
   // --- Initial fetch ---
   useEffect(() => {
     fetchFiles(page, pageSize);
-  }, [fetchFiles, page, pageSize]);
+  }, [fetchFiles, page, pageSize]); // ✅ fixed dependencies
 
-  // --- Navigation ---
+  // --- Lightbox navigation ---
   const handleNextImage = useCallback(() => {
     setSelectedIndex((prev) =>
       prev !== null && prev < files.length - 1 ? prev + 1 : prev
@@ -46,7 +47,6 @@ export default function Gallery() {
       ? files[selectedIndex]
       : null;
 
-  // --- Pagination helpers ---
   const handlePrevPage = () => {
     if (page > 1) fetchFiles(page - 1, pageSize);
   };
@@ -114,6 +114,14 @@ export default function Gallery() {
                 ? new Date(file.modifiedTime).toLocaleDateString()
                 : "N/A";
 
+              // ✅ Normalize thumbnail
+              const fileId =
+                extractDriveFileId(file.thumbnailLink || "") || file.id;
+              const thumbnail = getDriveThumbnail(
+                fileId || file.thumbnailLink || file.url,
+                400
+              );
+
               return (
                 <motion.div
                   key={file.id}
@@ -124,7 +132,7 @@ export default function Gallery() {
                 >
                   <div className="relative w-full h-48">
                     <Image
-                      src={file.thumbnail}
+                      src={thumbnail}
                       alt={file.name}
                       fill
                       className="object-cover rounded-lg"
@@ -200,7 +208,7 @@ export default function Gallery() {
 
               <div className="relative w-full max-h-[80vh] h-[70vh]">
                 <Image
-                  src={selectedFile.thumbnail}
+                  src={selectedFile.url}
                   alt={selectedFile.name}
                   fill
                   className="object-contain rounded-lg"
