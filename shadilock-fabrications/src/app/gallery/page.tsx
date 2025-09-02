@@ -16,7 +16,7 @@ export default function Gallery() {
   // --- Initial fetch ---
   useEffect(() => {
     fetchFiles(page, pageSize);
-  }, [fetchFiles]);
+  }, [fetchFiles, page, pageSize]); // ✅ fixed dependencies
 
   // --- Lightbox navigation ---
   const handleNextImage = useCallback(() => {
@@ -199,7 +199,7 @@ export default function Gallery() {
 
               <div className="relative w-full max-h-[80vh] h-[70vh]">
                 <Image
-                  src={selectedFile.url} // <- direct download link from Drive
+                  src={selectedFile.url}
                   alt={selectedFile.name}
                   fill
                   className="object-contain rounded-lg"
