@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { useDriveStore, DriveFile } from "@/lib/store/useDriveStore";
+import { useDriveStore, DriveFile } from "@/lib/store/useGalleryStore";
 
 type ToastType = "success" | "error" | "info";
 

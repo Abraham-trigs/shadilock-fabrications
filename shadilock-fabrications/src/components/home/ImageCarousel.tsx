@@ -3,27 +3,53 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { useGalleryStore } from "@/lib/store/useGalleryStore";
 
 interface ImageCarouselProps {
-  images: string[];
   interval?: number;
+  limit?: number; // optional: limit how many images to show
 }
 
 export default function ImageCarousel({
-  images,
   interval = 4000,
+  limit = 5,
 }: ImageCarouselProps) {
+  const { allFiles, refresh } = useGalleryStore();
+  const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Shuffle helper
+  const shuffle = (arr: string[]) => [...arr].sort(() => Math.random() - 0.5);
+
+  // Fetch + shuffle images once
+  useEffect(() => {
+    if (allFiles.length === 0) {
+      refresh().then(() => {
+        setImages(
+          shuffle(useGalleryStore.getState().allFiles.map((f) => f.url)).slice(
+            0,
+            limit
+          )
+        );
+      });
+    } else {
+      setImages(shuffle(allFiles.map((f) => f.url)).slice(0, limit));
+    }
+  }, [allFiles, limit, refresh]);
+
+  // Reset timeouts each slide
   const resetTimeouts = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (progressRef.current) clearInterval(progressRef.current);
   };
 
   useEffect(() => {
+    if (images.length === 0) return;
+
     resetTimeouts();
     setProgress(0);
 
@@ -36,12 +62,14 @@ export default function ImageCarousel({
     }, 100);
 
     return () => resetTimeouts();
-  }, [currentIndex, images.length, interval]);
+  }, [currentIndex, images, interval]);
 
   const goToPrev = () =>
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
 
   const goToNext = () => setCurrentIndex((prev) => (prev + 1) % images.length);
+
+  if (images.length === 0) return null;
 
   return (
     <div className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-2xl shadow-lg mt-10 md:mt-0">
@@ -91,9 +119,7 @@ export default function ImageCarousel({
             className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden"
           >
             <div
-              className={`h-full bg-white transition-all duration-100 ${
-                idx === currentIndex ? "w-full" : "w-0"
-              }`}
+              className={`h-full bg-white transition-all duration-100`}
               style={{ width: idx === currentIndex ? `${progress}%` : "0%" }}
             />
           </div>

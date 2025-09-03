@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
-import HomePageClient from "@/components/home/HomePageClient";
 
-// ✅ SEO Metadata (App Router)
+import Navbar from "@/components/layout/Navbar";
+import ResponsiveBackground from "@/components/layout/ResponsiveBackground";
+import HeroContent from "@/components/home/HeroContent";
+import InfoCards from "@/components/home/InfoCards";
+import ImageCarouselWrapper from "@/components/home/ImageCarousel";
+import OurServices from "@/components/home/OurServices";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
+
 export const metadata: Metadata = {
   title: "Shadilock Fabrications | Metal & Steel Works in Accra",
   description:
@@ -41,6 +47,45 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
-  return <HomePageClient />;
+const desktopBg = "/hero-desktop.webp";
+const laptopBg = "/hero-Tablet.webp";
+const mobileBg = "/hero-Mobile.webp";
+
+export default function HomePage() {
+  return (
+    <main className="relative w-full text-lightText">
+      <Navbar />
+
+      <section className="relative w-full min-h-screen flex flex-col">
+        <ResponsiveBackground
+          desktop={desktopBg}
+          laptop={laptopBg}
+          mobile={mobileBg}
+        />
+
+        {/* Wrapper */}
+        <div className="relative z-10 px-4 md:px-12 lg:px-20 py-12 mt-10">
+          {/* Mobile */}
+          <div className="flex flex-col gap-8 lg:hidden">
+            <HeroContent />
+            <ImageCarouselWrapper /> {/* ✅ client component */}
+          </div>
+
+          {/* Desktop */}
+          <div className="hidden lg:flex flex-row items-start gap-6">
+            <div className="w-full lg:w-2/3">
+              <HeroContent />
+            </div>
+            <div className="w-full lg:w-1/3 flex justify-center">
+              <ImageCarouselWrapper />
+            </div>
+          </div>
+        </div>
+
+        <OurServices />
+        <WhyChooseUs />
+        <InfoCards />
+      </section>
+    </main>
+  );
 }
