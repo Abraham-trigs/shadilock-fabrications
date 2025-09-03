@@ -3,7 +3,7 @@
 
 export default function DataDeletionPage() {
   return (
-    <div className="min-h-screen text-lightText p-8 md:p-16 bg-darkBg">
+    <div className="min-h-screen text-lightText p-8 md:p-16">
       <div className="max-w-4xl mx-auto bg-blue p-8 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-bold mb-6 text-orange hover:text-orangeHover transition-colors duration-300">
           Data Deletion Instructions
