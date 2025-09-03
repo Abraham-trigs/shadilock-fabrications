@@ -63,7 +63,10 @@ export default function PrivacyPolicyPage() {
           <p>
             Clients can request removal of their photos at any time by
             contacting us at{" "}
-            <span className="text-blue font-medium">[your email]</span>.
+            <span className="text-blue font-medium">
+              [abrahamtrigs@gmail.com]
+            </span>
+            .
           </p>
           <p>Users can also request access to or deletion of their data.</p>
         </section>
@@ -77,11 +80,16 @@ export default function PrivacyPolicyPage() {
             us at:
           </p>
           <p>
-            Email: <span className="text-blue font-medium">[your email]</span>
+            Email: {"abrahamtrigs@gmail.com "}
+            <span className="text-blue font-medium">
+              [abrahamtrigs@gmail.com]
+            </span>
           </p>
           <p>
-            Website:{" "}
-            <span className="text-blue font-medium">[your website URL]</span>
+            Website: {"https://shadilockfabrications.com/ "}
+            <span className="text-blue font-medium">
+              [https://shadilockfabrications.com/]
+            </span>
           </p>
         </section>
       </div>
