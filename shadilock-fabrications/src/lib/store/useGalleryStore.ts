@@ -94,8 +94,8 @@ export const useGalleryStore = create<GalleryState>()(
       closeLightbox: () => set({ selectedIndex: null }),
 
       nextImage: () => {
-        const { selectedIndex, files } = get();
-        if (selectedIndex !== null && selectedIndex < files.length - 1) {
+        const { selectedIndex, allFiles } = get();
+        if (selectedIndex !== null && selectedIndex < allFiles.length - 1) {
           set({ selectedIndex: selectedIndex + 1 });
         }
       },
@@ -107,6 +107,15 @@ export const useGalleryStore = create<GalleryState>()(
         }
       },
     }),
-    { name: "gallery-storage" } // persist key
+    {
+      name: "gallery-storage",
+      // Avoid persisting transient UI state
+      partialize: (state) => ({
+        allFiles: state.allFiles,
+        files: state.files,
+        page: state.page,
+        pageSize: state.pageSize,
+      }),
+    }
   )
 );
