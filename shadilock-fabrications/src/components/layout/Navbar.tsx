@@ -6,10 +6,11 @@ import { HiMenu, HiX } from "react-icons/hi";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 
 const navLinks = [
+  { name: "Home", href: "/" },
   { name: "Gallery", href: "/gallery" },
-  { name: "About", href: "/about" },
-  { name: "Services", href: "/services" },
   { name: "Contact", href: "/contact" },
+  { name: "Services", href: "/services" },
+  { name: "About", href: "/about" },
 ];
 
 export default function Navbar() {
