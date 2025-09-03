@@ -26,7 +26,7 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="w-full bg-blue text-blue px-6 md:px-12 lg:px-20 py-16">
+    <section className="w-full bg-blue text-lightText px-6 md:px-12 lg:px-20 py-16">
       <div className="max-w-4xl mx-auto text-center mb-12">
         <div className="mb-6 flex justify-center">
           <Image
@@ -144,8 +144,7 @@ export default function ContactForm() {
                 <FaInstagram size={20} />
               </a>
               <a
-                href="https://wa.me/233246786638?text=Hello%20Shadilock%20Fabrications%20👋%0A%0APlease%20choose%20an%20option%20to%20help%20us%20assist%20you%20quickly%3A%0A1%E2%83%A3%20Services%0A2%E2%83%A3%20Get%20a%20Quote%0A3%E2%83%A3%20Contact%20Support%0A%0AYou%20can%20also%20visit%20our%20website%20for%20more%20information%3A%20https%3A%2F%2Fshadilockfabrications.com
-"
+                href="https://wa.me/233246786638?text=Hello%20Shadilock%20Fabrications%20👋%0A%0APlease%20choose%20an%20option%20to%20help%20us%20assist%20you%20quickly%3A%0A1%E2%83%A3%20Services%0A2%E2%83%A3%20Get%20a%20Quote%0A3%E2%83%A3%20Contact%20Support%0A%0AYou%20can%20also%20visit%20our%20website%20for%20more%20information%3A%20https%3A%2F%2Fshadilockfabrications.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 rounded-full bg-orange border border-blueHover hover:bg-orange hover:text-darkBg transition"

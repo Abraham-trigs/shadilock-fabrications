@@ -154,7 +154,7 @@ export default function About() {
               key={idx}
               className="flex flex-col items-center text-center transition-transform duration-300 hover:scale-105"
             >
-              <div className="w-24 h-24 mb-4 rounded-full overflow-hidden border-2 border-lightText">
+              {/* <div className="w-24 h-24 mb-4 rounded-full overflow-hidden border-2 border-lightText">
                 <Image
                   src={member.img}
                   alt={`${member.name}, ${member.role}`}
@@ -162,9 +162,9 @@ export default function About() {
                   height={96}
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </div> */}
               <h3 className="text-lg font-semibold text-lightText">
-                {member.name}
+                {/* {member.name} */}
               </h3>
               <p className="text-sm text-lightText opacity-80">{member.role}</p>
             </div>

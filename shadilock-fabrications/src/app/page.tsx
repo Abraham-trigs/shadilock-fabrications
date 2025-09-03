@@ -66,7 +66,7 @@ export default function HomePage() {
         {/* Wrapper */}
         <div className="relative z-10 px-4 md:px-12 lg:px-20 py-12 mt-8">
           {/* Mobile */}
-          <div className="flex flex-col gap-2 lg:hidden">
+          <div className="flex flex-col gap lg:hidden">
             <HeroContent />
             <ImageCarouselWrapper /> {/* ✅ client component */}
           </div>
