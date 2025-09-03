@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
 import Image from "next/image";
 import { useGalleryStore } from "@/lib/store/useGalleryStore";
 
 interface ImageCarouselProps {
   interval?: number;
-  limit?: number; // optional: limit how many images to show
+  limit?: number;
 }
 
 export default function ImageCarousel({
@@ -18,6 +18,7 @@ export default function ImageCarousel({
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [shuffling, setShuffling] = useState(false);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
@@ -64,10 +65,24 @@ export default function ImageCarousel({
     return () => resetTimeouts();
   }, [currentIndex, images, interval]);
 
-  const goToPrev = () =>
+  const goToPrev = () => {
+    resetTimeouts();
+    setProgress(0);
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
 
-  const goToNext = () => setCurrentIndex((prev) => (prev + 1) % images.length);
+  const goToNext = () => {
+    resetTimeouts();
+    setProgress(0);
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const shuffleImages = () => {
+    setShuffling(true);
+    setImages(shuffle([...images]));
+    setCurrentIndex(0);
+    setTimeout(() => setShuffling(false), 600);
+  };
 
   if (images.length === 0) return null;
 
@@ -110,6 +125,19 @@ export default function ImageCarousel({
       >
         <ChevronRight className="w-6 h-6" />
       </button>
+
+      {/* Shuffle Button - appears only on last slide */}
+      {currentIndex === images.length - 1 && (
+        <button
+          onClick={shuffleImages}
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg transition ${
+            shuffling ? "animate-spin" : ""
+          }`}
+          title="Shuffle images"
+        >
+          <Shuffle className="w-6 h-6" />
+        </button>
+      )}
 
       {/* Progress Indicators */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 w-full max-w-xs px-4">
