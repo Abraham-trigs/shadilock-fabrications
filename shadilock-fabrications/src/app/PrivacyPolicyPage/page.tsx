@@ -3,7 +3,7 @@
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen  text-lightText p-8 md:p-16">
+    <div className="min-h-screen text-lightText p-8 md:p-16">
       <div className="max-w-4xl mx-auto bg-blue p-8 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-bold mb-6 text-orange hover:text-orangeHover transition-colors duration-300">
           Privacy Policy
@@ -63,9 +63,12 @@ export default function PrivacyPolicyPage() {
           <p>
             Clients can request removal of their photos at any time by
             contacting us at{" "}
-            <span className="text-blue font-medium">
-              [abrahamtrigs@gmail.com]
-            </span>
+            <a
+              href="mailto:abrahamtrigs@gmail.com"
+              className="text-blue font-medium hover:underline"
+            >
+              abrahamtrigs@gmail.com
+            </a>
             .
           </p>
           <p>Users can also request access to or deletion of their data.</p>
@@ -80,16 +83,24 @@ export default function PrivacyPolicyPage() {
             us at:
           </p>
           <p>
-            Email: {"abrahamtrigs@gmail.com "}
-            <span className="text-blue font-medium">
-              [abrahamtrigs@gmail.com]
-            </span>
+            Email:{" "}
+            <a
+              href="mailto:abrahamtrigs@gmail.com"
+              className="text-blue font-medium hover:underline"
+            >
+              abrahamtrigs@gmail.com
+            </a>
           </p>
           <p>
-            Website: {"https://shadilockfabrications.com/ "}
-            <span className="text-blue font-medium">
-              [https://shadilockfabrications.com/]
-            </span>
+            Website:{" "}
+            <a
+              href="https://shadilockfabrications.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue font-medium hover:underline"
+            >
+              https://shadilockfabrications.com/
+            </a>
           </p>
         </section>
       </div>
