@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 export default function Footer() {
@@ -8,7 +9,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
         {/* Brand / Logo */}
         <div>
-          <h2 className="text-xl font-bold mb-2">Shadilock</h2>
+          <Link href="/appointment">
+            <h2 className="text-xl font-bold mb-2 cursor-pointer hover:text-white">
+              Shadilock
+            </h2>
+          </Link>
           <p className="text-sm opacity-80">
             Aluminium & Glass Solutions with quality, innovation, and customer
             satisfaction.
@@ -63,8 +68,7 @@ export default function Footer() {
               <FaInstagram className="text-2xl" />
             </a>
             <a
-              href="https://wa.me/233246786638?text=Hello%20Shadilock%20Fabrications%20👋%0A%0APlease%20choose%20an%20option%20to%20help%20us%20assist%20you%20quickly%3A%0A1%E2%83%A3%20Services%0A2%E2%83%A3%20Get%20a%20Quote%0A3%E2%83%A3%20Contact%20Support%0A%0AYou%20can%20also%20visit%20our%20website%20for%20more%20information%3A%20https%3A%2F%2Fshadilockfabrications.com
-"
+              href="https://wa.me/233246786638?text=Hello%20Shadilock%20Fabrications%20👋%0A%0APlease%20choose%20an%20option%20to%20help%20us%20assist%20you%20quickly%3A%0A1%E2%83%A3%20Services%0A2%E2%83%A3%20Get%20a%20Quote%0A3%E2%83%A3%20Contact%20Support%0A%0AYou%20can%20also%20visit%20our%20website%20for%20more%20information%3A%20https%3A%2F%2Fshadilockfabrications.com"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors"
