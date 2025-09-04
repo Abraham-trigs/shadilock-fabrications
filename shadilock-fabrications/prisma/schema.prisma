@@ -14,7 +14,7 @@ enum UserRole {
 model User {
   id          String        @id @default(cuid())
   username    String
-  email       String
+  email String @unique
   password    String        // For login authentication
   role        UserRole      @default(ADMIN)
   appointments Appointment[] // Relation to appointments

@@ -8,8 +8,8 @@ interface Appointment {
   email: string;
   phone: string;
   service: string;
-  date: string; // Prisma DateTime serialized as string
-  time: string; // "HH:mm"
+  date: string;
+  time: string;
   notes?: string;
   createdAt: string;
 }
@@ -19,7 +19,17 @@ export default function AppointmentPage() {
   const [loading, setLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState<"earliest" | "latest">("earliest");
 
+  // Login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [loginError, setLoginError] = useState("");
+
+  // Fetch appointments after login
   useEffect(() => {
+    if (!isLoggedIn) return;
+
     const fetchAppointments = async () => {
       try {
         const res = await fetch("/api/appointment");
@@ -35,9 +45,8 @@ export default function AppointmentPage() {
     };
 
     fetchAppointments();
-  }, []);
+  }, [isLoggedIn]);
 
-  // Combine date and time into a proper Date object
   const combineDateTime = (dateStr: string, timeStr: string) => {
     const dateObj = new Date(dateStr);
     const [hours, minutes] = timeStr.split(":").map(Number);
@@ -45,7 +54,6 @@ export default function AppointmentPage() {
     return dateObj;
   };
 
-  // Sort appointments by date + time
   const sortedAppointments = [...appointments].sort((a, b) => {
     const dateA = combineDateTime(a.date, a.time);
     const dateB = combineDateTime(b.date, b.time);
@@ -53,6 +61,73 @@ export default function AppointmentPage() {
       ? dateA.getTime() - dateB.getTime()
       : dateB.getTime() - dateA.getTime();
   });
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError("");
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailInput, password: passwordInput }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setLoginError(data.error || "Login failed");
+        return;
+      }
+
+      // Successful login
+      setUsername(data.username);
+      setIsLoggedIn(true);
+      localStorage.setItem("token", data.token); // optional for future API auth
+    } catch (err) {
+      console.error(err);
+      setLoginError("Login failed");
+    }
+  };
+
+  // Login modal
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-blue">
+        <form
+          onSubmit={handleLogin}
+          className="bg-orange p-6 rounded-xl shadow-md w-96 space-y-4"
+        >
+          <h2 className="text-2xl font-bold text-blue text-center">
+            Admin Login
+          </h2>
+          <input
+            type="email"
+            placeholder="Email"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+            className="w-full p-2 rounded-lg"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+            className="w-full p-2 rounded-lg"
+            required
+          />
+          {loginError && <p className="text-red-600">{loginError}</p>}
+          <button
+            type="submit"
+            className="w-full p-2 rounded-lg bg-blue text-lightText font-semibold hover:bg-blueHover transition"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -64,8 +139,9 @@ export default function AppointmentPage() {
 
   if (!appointments.length) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-blue text-lightText">
-        No appointments found.
+      <div className="min-h-screen flex flex-col items-center justify-center bg-blue text-lightText">
+        <p className="mb-4">Welcome, {username}</p>
+        <p>No appointments found.</p>
       </div>
     );
   }
@@ -75,6 +151,9 @@ export default function AppointmentPage() {
       <h1 className="text-3xl font-bold text-orange mb-6 text-center">
         Appointments
       </h1>
+      <p className="text-center mb-4 text-blue font-semibold">
+        Logged in as: {username}
+      </p>
 
       {/* Sorting Dropdown */}
       <div className="mb-6 text-center">
@@ -110,7 +189,7 @@ export default function AppointmentPage() {
           return (
             <div
               key={appt.id}
-              className="p-4 rounded-xl shadow-md bg-blue text-lightText hover:bg-blueHover transition-colors "
+              className="p-4 rounded-xl shadow-md bg-blue text-lightText hover:bg-blueHover transition-colors"
             >
               <p>
                 <span className="font-semibold">Name:</span> {appt.name}
