@@ -109,11 +109,12 @@ export default function ContactForm() {
         >
           <div>
             <h3 className="text-xl font-semibold mb-2">Address</h3>
-            <p>123 Aluminium St., Accra, Ghana</p>
+            <p>Mantse odai Tawiah street</p>
+            <p>GZ- 024-5401</p>
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-2">Email</h3>
-            <p>info@shadilock.com</p>
+            <p>shadrackbortey19@gmail.com</p>
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-2">Phone</h3>
@@ -121,7 +122,7 @@ export default function ContactForm() {
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-2">Working Hours</h3>
-            <p>Mon - Sat: 8:00 AM - 6:00 PM</p>
+            <p>Mon - Sat: 7:00 AM - 5:00 PM</p>
           </div>
 
           <div>
