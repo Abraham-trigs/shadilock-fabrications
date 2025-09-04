@@ -12,29 +12,34 @@ type AppointmentRecord = {
   time: string;
   notes?: string | null;
   createdAt: Date;
+  adminUsername: string;
 };
 
 // GET all appointments
 export const GET = async () => {
   try {
     const appointments = await prisma.appointment.findMany({
-      orderBy: { date: "asc" }, // earliest first
+      orderBy: { date: "asc" },
+      include: { admin: true }, // include admin relation
     });
 
-    // Format dates to ISO string for front-end
-    const formattedAppointments = (appointments as AppointmentRecord[]).map(a => ({
-      ...a,
+    const formattedAppointments = appointments.map(a => ({
+      id: a.id,
+      name: a.name,
+      email: a.email,
+      phone: a.phone,
+      service: a.service,
       date: a.date.toISOString(),
+      time: a.time,
+      notes: a.notes,
       createdAt: a.createdAt.toISOString(),
+      adminUsername: a.admin.username, // attach admin username
     }));
 
     return NextResponse.json({ appointments: formattedAppointments });
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: "Failed to fetch appointments" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch appointments" }, { status: 500 });
   }
 };
 
@@ -44,11 +49,11 @@ export const POST = async (req: NextRequest) => {
     const { name, email, phone, service, date, time, notes } = await req.json();
 
     if (!name || !email || !service || !date || !time) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
+
+    const adminUser = await prisma.user.findFirst({ where: { role: "ADMIN" } });
+    if (!adminUser) return NextResponse.json({ error: "No admin user found" }, { status: 500 });
 
     const appointment = await prisma.appointment.create({
       data: {
@@ -59,23 +64,28 @@ export const POST = async (req: NextRequest) => {
         date: new Date(date),
         time,
         notes,
+        admin: { connect: { id: adminUser.id } },
       },
+      include: { admin: true },
     });
 
-    // Return appointment with ISO date
     const formattedAppointment = {
-      ...appointment,
+      id: appointment.id,
+      name: appointment.name,
+      email: appointment.email,
+      phone: appointment.phone,
+      service: appointment.service,
       date: appointment.date.toISOString(),
+      time: appointment.time,
+      notes: appointment.notes,
       createdAt: appointment.createdAt.toISOString(),
+      adminUsername: appointment.admin.username,
     };
 
     return NextResponse.json({ success: true, appointment: formattedAppointment });
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: "Failed to create appointment" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create appointment" }, { status: 500 });
   }
 };
 
@@ -90,19 +100,19 @@ export const DELETE = async (req: NextRequest) => {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: "Failed to delete appointment" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete appointment" }, { status: 500 });
   }
 };
 
-// PUT to update an appointment by ID
+// PUT update appointment by ID
 export const PUT = async (req: NextRequest) => {
   try {
     const { id, name, email, phone, service, date, time, notes } = await req.json();
 
     if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+
+    const adminUser = await prisma.user.findFirst({ where: { role: "ADMIN" } });
+    if (!adminUser) return NextResponse.json({ error: "No admin user found" }, { status: 500 });
 
     const updatedAppointment = await prisma.appointment.update({
       where: { id },
@@ -114,21 +124,27 @@ export const PUT = async (req: NextRequest) => {
         date: date ? new Date(date) : undefined,
         time,
         notes,
+        admin: { connect: { id: adminUser.id } },
       },
+      include: { admin: true },
     });
 
     const formattedAppointment = {
-      ...updatedAppointment,
+      id: updatedAppointment.id,
+      name: updatedAppointment.name,
+      email: updatedAppointment.email,
+      phone: updatedAppointment.phone,
+      service: updatedAppointment.service,
       date: updatedAppointment.date.toISOString(),
+      time: updatedAppointment.time,
+      notes: updatedAppointment.notes,
       createdAt: updatedAppointment.createdAt.toISOString(),
+      adminUsername: updatedAppointment.admin.username,
     };
 
     return NextResponse.json({ success: true, appointment: formattedAppointment });
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: "Failed to update appointment" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update appointment" }, { status: 500 });
   }
 };
