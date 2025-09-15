@@ -1,5 +1,5 @@
 {
-  "name": "ellicom-hub",
+  "name": "shadilock-fabrications",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,6 +11,7 @@
     "prisma:seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@prisma/client": "^6.15.0",
     "@vercel/speed-insights": "^1.2.0",
     "bcrypt": "^6.0.0",

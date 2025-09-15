@@ -3,26 +3,90 @@
 import { useState, useEffect } from "react";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import Image from "next/image";
+import emailjs from "@emailjs/browser";
+
+// Initialize EmailJS with public key from environment variables
+emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
 
 export default function ContactForm() {
   const [animate, setAnimate] = useState(false);
-
-  useEffect(() => setAnimate(true), []);
-
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
     message: "",
   });
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  useEffect(() => setAnimate(true), []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const showNotification = (type: "success" | "error", message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", form);
+
+    if (!form.name || !form.email || !form.message) {
+      showNotification("error", "Please fill in all required fields!");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Send the visitor message to Shadilock inbox
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          from_name: form.name, // visitor name
+          reply_to: form.email, // visitor email
+          phone: form.phone,
+          message: form.message,
+        }
+      );
+
+      showNotification("success", "Message sent successfully!");
+      setForm({ name: "", email: "", phone: "", message: "" });
+
+      // Send auto-reply to visitor
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!, // can use a separate auto-reply template if needed
+        {
+          from_name: "Shadilock Fabrication Team",
+          reply_to: form.email,
+          message: `Hello ${form.name},
+
+Thank you for reaching out to Shadilock Fabrication! We have received your request:
+
+"${form.message}"
+
+Our team will respond within 3 business days. For urgent inquiries, you can also reach us directly on WhatsApp:
+https://wa.me/233246786638
+
+Visit our website for more info: https://shadilockfabrications.com
+
+Best regards,
+The Shadilock Fabrication Team`,
+        }
+      );
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      showNotification("error", "Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,6 +119,17 @@ export default function ContactForm() {
             animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-6"
           }`}
         >
+          {/* Notification banner */}
+          {notification && (
+            <div
+              className={`p-3 rounded-lg text-white font-semibold mb-2 ${
+                notification.type === "success" ? "bg-green-600" : "bg-red-600"
+              }`}
+            >
+              {notification.message}
+            </div>
+          )}
+
           <input
             id="name"
             name="name"
@@ -90,14 +165,17 @@ export default function ContactForm() {
             placeholder="Your Message"
             value={form.message}
             onChange={handleChange}
-            className="p-3 rounded-lg bg-lightText border border-blue focus:border-orange focus:outline-none transition resize-none h-32"
+            className="p-3 rounded-lg bg-lightText border text-blue border-blue focus:border-orange focus:outline-none transition resize-none h-32"
             required
           />
           <button
             type="submit"
-            className="bg-orange hover:bg-orangeHover text-darkBg font-bold py-3 px-6 rounded-lg transition"
+            disabled={loading}
+            className={`bg-orange hover:bg-orangeHover text-darkBg font-bold py-3 px-6 rounded-lg transition ${
+              loading ? "opacity-60 cursor-not-allowed" : ""
+            }`}
           >
-            Send Message
+            {loading ? "Sending..." : "Send Message"}
           </button>
         </form>
 
@@ -110,7 +188,7 @@ export default function ContactForm() {
           <div>
             <h3 className="text-xl font-semibold mb-2">Address</h3>
             <p>Mantse odai Tawiah street</p>
-            <p>GZ- 024-5401</p>
+            <p>GZ- 024-5401</p>
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-2">Email</h3>
@@ -145,7 +223,7 @@ export default function ContactForm() {
                 <FaInstagram size={20} />
               </a>
               <a
-                href="https://wa.me/233246786638?text=Hello%20Shadilock%20Fabrications%20👋%0A%0APlease%20choose%20an%20option%20to%20help%20us%20assist%20you%20quickly%3A%0A1%E2%83%A3%20Services%0A2%E2%83%A3%20Get%20a%20Quote%0A3%E2%83%A3%20Contact%20Support%0A%0AYou%20can%20also%20visit%20our%20website%20for%20more%20information%3A%20https%3A%2F%2Fshadilockfabrications.com"
+                href="https://wa.me/233246786638"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 rounded-full bg-orange border border-blueHover hover:bg-orange hover:text-darkBg transition"
