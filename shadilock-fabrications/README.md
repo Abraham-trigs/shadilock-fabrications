@@ -1,34 +1,62 @@
 # Shadilock Fabrications
 
-Shadilock Fabrications is a **web platform for a fabrication and design company**. The website showcases services, manages client requests, and handles internal workflows such as job management, team collaboration, and customer communication. It is built with **Next.js 14**, **Prisma ORM**, and **Tailwind CSS**, with strong focus on scalability, role-based access, and seamless user experience.
+Shadilock Fabrications is a **web platform and company website** for a metal fabrication and design business based in Accra, Ghana.  
+The website showcases services, highlights expertise, allows clients to get in touch, and supports internal workflows such as job management, authentication, and customer communication.
+
+It is built with **Next.js 14**, **Prisma ORM**, and **Tailwind CSS**, focusing on scalability, SEO optimization, role-based access, and seamless user experience.
+
+---
+
+## 🌐 Website Sections
+
+- **Landing Page (Hero Section)**  
+  Eye-catching background, hero content, and company branding.
+
+- **Our Services**  
+  Highlights offerings such as aluminium windows, doors, railings, shop fronts, partitions, custom fabrication, curtain walls, and canopies.
+
+- **Why Choose Us**  
+  Emphasizes the company’s values: experience, quality materials, custom designs, fast delivery, reliable support, and timely completion.
+
+- **Image Carousel & Info Cards**  
+  Interactive visual elements to showcase projects and services.
+
+- **Contact Page**  
+  Integrated contact form powered by EmailJS for quick inquiries and service requests.
+
+- **Responsive Design**  
+  Optimized for desktop, tablet, and mobile with adaptive background images.
+
+- **SEO Optimized**  
+  Metadata includes keywords, OpenGraph tags, and Twitter cards for better discoverability.
 
 ---
 
 ## 🚀 Features
 
-- **Company Website & Services**  
-  Present fabrication services with a clean UI and interactive components.
+- **Company Website & Service Showcase**  
+  Interactive and visually engaging UI with animations and dynamic content.
 
 - **Job Management**  
-  Handle client job requests, project tracking, and internal workflows.
+  Handle client requests, track projects, and manage internal workflows.
 
 - **Authentication & Authorization**  
   Secure login with role-based access (Admin, Staff, Client).
 
 - **Contact & Communication**  
-  EmailJS integration for seamless contact forms and notifications.
+  EmailJS-powered forms with notifications.
 
 - **File Uploads**  
-  Support for file attachments (via Multer & Formidable).
+  Multer & Formidable support for attachments.
 
 - **Theming & UX**  
-  Dark mode support with `next-themes`, animations via `framer-motion`.
+  Dark mode, Tailwind utilities, and Framer Motion animations.
 
 - **Performance & Analytics**  
-  Optimized with Vercel Speed Insights.
+  Optimized using Vercel Speed Insights.
 
 - **State Management**  
-  Built with Zustand for predictable global state.
+  Zustand for predictable and scalable state handling.
 
 ---
 
@@ -36,11 +64,11 @@ Shadilock Fabrications is a **web platform for a fabrication and design company*
 
 - **Framework:** [Next.js 14](https://nextjs.org/)
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/), [tailwind-merge](https://tailwind-merge.vercel.app/), [tailwindcss-animate](https://tailwindcss-animate.vercel.app/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/), `tailwind-merge`, `tailwindcss-animate`
 - **Database:** [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/)
 - **State Management:** [Zustand](https://github.com/pmndrs/zustand)
-- **Authentication:** [jsonwebtoken](https://jwt.io/), [bcrypt/bcryptjs](https://www.npmjs.com/package/bcrypt)
-- **Forms & Uploads:** Formidable, Multer
+- **Authentication:** JWT, bcrypt/bcryptjs
+- **File Handling:** Formidable, Multer
 - **Icons:** React Icons, Lucide React
 - **Other:** EmailJS, Google APIs, Framer Motion
 
@@ -60,45 +88,6 @@ Shadilock Fabrications is a **web platform for a fabrication and design company*
     "postinstall": "prisma generate",
     "lint": "next lint",
     "prisma:seed": "ts-node prisma/seed.ts"
-  },
-  "dependencies": {
-    "@emailjs/browser": "^4.4.1",
-    "@prisma/client": "^6.15.0",
-    "@vercel/speed-insights": "^1.2.0",
-    "bcrypt": "^6.0.0",
-    "bcryptjs": "^3.0.2",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "formidable": "^3.5.4",
-    "framer-motion": "^12.23.12",
-    "googleapis": "^159.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.536.0",
-    "multer": "^2.0.2",
-    "next": "14.2.31",
-    "next-themes": "^0.4.6",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-icons": "^5.5.0",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss-animate": "^1.0.7",
-    "zustand": "^5.0.8"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/bcryptjs": "^3.0.0",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/multer": "^2.0.0",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.31",
-    "postcss": "^8",
-    "prisma": "^6.15.0",
-    "tailwindcss": "^3.4.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5"
   }
 }
 ```
@@ -118,7 +107,8 @@ npm install
 # Generate Prisma client
 npx prisma generate
 
-# Apply migrations\pnpx prisma migrate dev
+# Apply migrations
+npx prisma migrate dev
 
 # Seed database (optional)
 npm run prisma:seed
@@ -133,10 +123,15 @@ npm run dev
 
 ```
 shadilock-fabrications/
-├── app/                # Next.js app router pages & layouts
+├── app/                # Next.js app router pages (Home, Contact, etc.)
+│   ├── page.tsx        # Homepage with Hero, Services, Why Choose Us
+│   ├── contact/        # Contact page with form
 ├── components/         # Reusable UI components
+│   ├── home/           # HeroContent, OurServices, WhyChooseUs, InfoCards
+│   ├── layout/         # Navbar, ResponsiveBackground, etc.
+│   ├── ui/             # Shared UI elements (Card, Buttons, etc.)
 ├── prisma/             # Prisma schema & seed files
-├── public/             # Static assets (images, icons, etc.)
+├── public/             # Static assets (images, logo, og-image, etc.)
 ├── styles/             # Tailwind and global styles
 ├── utils/              # Utility functions (auth, helpers, etc.)
 ├── package.json        # Project manifest
@@ -161,23 +156,13 @@ EMAILJS_TEMPLATE_ID="your-template-id"
 
 ## 📈 Deployment
 
-- **Vercel** (Recommended) → Native Next.js hosting & integrations.
-- **Docker** → Containerized deployments.
-- **Custom VPS** → Any Node.js-compatible server.
+- **Vercel** (Recommended) – Native Next.js hosting & integrations.
+- **Docker** – For containerized deployments.
+- **Custom VPS** – Any Node.js-compatible server.
 
 ---
 
-## 🧑‍💻 Contributing
-
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/xyz`)
-3. Commit changes (`git commit -m 'Add xyz'`)
-4. Push branch (`git push origin feature/xyz`)
-5. Create a Pull Request
-
----
-
-## License
+## 🔒 License
 
 © 2025 Shadilock Fabrications. All rights reserved.
 
@@ -190,4 +175,4 @@ You may not:
 - Modify or create derivative works of the code.
 - Submit external contributions without explicit written permission.
 
-For commercial or partnership inquiries, please contact: [your abrahamtrigs@gmail.com].
+For business or partnership inquiries, contact: **abrahamtrigs@gmailcom**
