@@ -131,7 +131,7 @@ export default function Navbar() {
             ))}
 
             <Link href="/contact" className="ml-4">
-              <a className="w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
+              <a className=" mt-4 w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
                 Book an Appointment
               </a>
             </Link>
