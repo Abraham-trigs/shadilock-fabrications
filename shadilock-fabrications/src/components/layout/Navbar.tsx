@@ -72,7 +72,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link href="/book">
-              <button className="ml-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
+              <button className="mt-3 ml-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
                 Book an Appointment
               </button>
             </Link>{" "}
