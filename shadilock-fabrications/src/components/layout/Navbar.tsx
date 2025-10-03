@@ -13,6 +13,15 @@ const navLinks = [
   { name: "About", href: "/about" },
 ];
 
+// Reusable Button component
+const NavButton = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <Link href={href} className="w-full">
+    <a className="mt-12 block w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95 text-center">
+      {children}
+    </a>
+  </Link>
+);
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState<string>("");
@@ -29,23 +38,11 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Define variants with proper type
+  // Framer Motion variants
   const menuVariants: Variants = {
-    hidden: {
-      x: "100%",
-      opacity: 0,
-      transition: { type: "spring", stiffness: 300, damping: 30 },
-    },
-    visible: {
-      x: "0%",
-      opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 30 },
-    },
-    exit: {
-      x: "100%",
-      opacity: 0,
-      transition: { type: "spring", stiffness: 300, damping: 30 },
-    },
+    hidden: { x: "100%", opacity: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
+    visible: { x: "0%", opacity: 1, transition: { type: "spring", stiffness: 300, damping: 30 } },
+    exit: { x: "100%", opacity: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
   };
 
   return (
@@ -71,11 +68,7 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <Link href="/book"
-              <button className=" mt-12 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
-                Book an Appointment
-              </button>
-            </Link>{" "}
+            <NavButton href="/book">Book an Appointment</NavButton>
           </div>
 
           {/* Mobile Hamburger */}
@@ -90,7 +83,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu with Framer Motion */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -113,28 +106,21 @@ export default function Navbar() {
               >
                 <span
                   className={`relative z-10 ${
-                    activeLink === link.href
-                      ? "text-orange font-semibold"
-                      : "text-lightText"
+                    activeLink === link.href ? "text-orange font-semibold" : "text-lightText"
                   } hover:text-orangeHover transition-colors duration-300`}
                 >
                   {link.name}
                 </span>
                 <span
                   className={`absolute left-1/2 -bottom-1 h-[2px] bg-orange transition-all duration-300 transform -translate-x-1/2 ${
-                    activeLink === link.href
-                      ? "w-full"
-                      : "w-0 group-hover:w-full"
+                    activeLink === link.href ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                 />
               </Link>
             ))}
 
-            <Link href="/contact" className="ml-4 w-full">
-  <a className="mt-12 block w-full px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
-    Book an Appointment
-  </a>
-</Link>
+            {/* Mobile Book Appointment Button */}
+            <NavButton href="/book">Book an Appointment</NavButton>
           </motion.div>
         )}
       </AnimatePresence>
