@@ -71,8 +71,8 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <Link href="/book">
-              <button className=" mt-4 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
+            <Link href="/book"
+              <button className=" mt-8 px-4 py-2 bg-orange text-blue font-semibold rounded-lg shadow-md hover:bg-orangeHover transition-transform transform hover:scale-105 active:scale-95">
                 Book an Appointment
               </button>
             </Link>{" "}
