@@ -1,25 +1,22 @@
 Shadilock Fabrications Website
 
-A modern web platform and company website for Shadilock Fabrications, a metal fabrication and design business based in Accra, Ghana.
-The website showcases services, highlights expertise, enables client communication, and supports workflows such as booking, email inquiries, and job management.
+A modern web platform for Shadilock Fabrications, a metal fabrication business in Accra, Ghana. Showcases services, highlights expertise, enables client communication, and supports workflows such as booking management, email inquiries, and job tracking.
 
 Live: shadilockfabrications.com
 
 🚀 Features
 
-Responsive Company Website – Works on desktop, tablet, and mobile.
+Responsive design for desktop, tablet & mobile
 
-Service Showcase – Aluminium windows, doors, railings, shop fronts, partitions, custom fabrication, curtain walls, and canopies.
+Service showcase: windows, doors, railings, shop fronts, partitions, custom fabrication, curtain walls, canopies
 
-Booking System – Clients can schedule services directly on the website.
+Booking Management – Clients can schedule services online
 
-Email Integration – EmailJS handles inquiry forms efficiently.
+Email Integration – EmailJS for inquiries
 
-Interactive UI – Image carousels, info cards, and animations (Framer Motion).
+Interactive UI – Image carousels, info cards, animations (Framer Motion)
 
-Authentication & Authorization – Secure login with role-based access for Admin, Staff, and Clients.
-
-Job Management – Internal workflow tracking and project management.
+Job Management – Track projects & internal workflows
 
 🛠️ Tech Stack
 
