@@ -60,12 +60,11 @@ shadilock-fabrications/
 ⚡ Quick Start
 git clone https://github.com/Abraham-trigs/shadilock-fabrications
 cd shadilock-fabrications
-npm install
+pnpm install
 npx prisma generate
-npm run dev
+pnpm dev
 
 
-Optional: Use npm run prisma:seed to populate sample data.
 
 ✅ Impact
 
